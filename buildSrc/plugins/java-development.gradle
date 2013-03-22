@@ -1,0 +1,118 @@
+import org.gradle.api.Task
+import org.gradle.api.tasks.GradleBuild
+import org.gradle.logging.StyledTextOutputFactory
+import org.gradle.logging.StyledTextOutput.Style
+
+
+apply plugin: "java"
+
+task newJavaProject(type: GradleBuild ) { GradleBuild task ->
+    group ='Development'
+    description ="Creates a new Java project putting it already to SVN and applying some SVN ignore magic from predefined file which seem to be ${svnIgnoreFile}. Needs -PnewJavaProject argument."
+
+    def javaProject =  task.project.properties.newJavaProject
+    String createJavaDirs = "${javaProject}:createJavaDirs"
+    String eclipseSettingsFor = "${javaProject}:eclipseSettingsFor"
+    String svnAdd = "${javaProject}:svnAdd"
+    String svnIgnore = "${javaProject}:svnIgnore"
+
+    task.tasks << createJavaDirs
+    task.tasks << svnAdd
+    task.tasks << svnIgnore
+    task.tasks << eclipseSettingsFor
+
+    doLast {
+        printOutInfo("java-development.newJavaProject", "New Java project can now be found from ${task.project.buildDir}/${javaProject}")
+    }
+}
+
+task newJavaLibProject(type: GradleBuild) { GradleBuild task ->
+    group ='Development'
+    description ="Creates a new Java library project putting it already to SVN and applying some SVN ignore magic from predefined file which seem to be ${svnIgnoreFile}."
+    def javaProject =  task.project.properties.newJavaProject
+    String createJavaDirs = "${javaProject}:createJavaDirs"
+    String eclipseSettingsFor = "${javaProject}:eclipseSettingsFor"
+    String svnAdd = "${javaProject}:svnAdd"
+    String svnIgnore = "${javaProject}:svnIgnore"
+    String createLibDirs="${javaProject}:createLibDirs"
+
+    task.tasks << createJavaDirs
+    task.tasks << createLibDirs
+    task.tasks << svnAdd
+    task.tasks << svnIgnore
+    task.tasks << eclipseSettingsFor
+
+    doLast {
+        printOutInfo("java-development.newJavaProject", "New Java project can now be found from ${task.project.buildDir}/${javaProject}")
+    }
+}
+
+subprojects {
+
+    task createLibDirs  { Task task ->
+        group 'Development'
+        description 'Creates lib and lib-sources -directories under the given project.'
+        doLast {
+            def libDir = new File(task.project.projectDir, 'lib')
+            libDir.mkdirs()
+            def libSourcesDir = new File(task.project.projectDir, 'lib-sources')
+            libSourcesDir.mkdirs()
+        }
+    }
+
+    task createJavaDirs() { Task task ->
+        group 'Development'
+        description 'Create directory structures for a Java project.'
+        doLast {
+            sourceSets*.java.srcDirs*.each { it.mkdirs() }
+            sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+        }
+    }
+
+    task svnAdd { Task task ->
+        group 'Development'
+        description 'Add project to SVN.'
+        doLast {
+            def out= ""
+            new ByteArrayOutputStream().withStream { os ->
+                def result = exec {
+                    executable = 'svn'
+                    args = [
+                        'add',
+                        "${task.project.name}"
+                    ]
+                    standardOutput = os
+                }
+                out = os.toString()
+            }
+            printOutInfo("java-development.svnAdd", "Project ${task.project.name} was added to SVN")
+        }
+    }
+
+    task svnIgnore { Task task ->
+        group 'Development'
+        description "Applies SVN ignore based on contents in ${svnIgnoreFile}."
+        doLast {
+            def out= ""
+            new ByteArrayOutputStream().withStream { os ->
+                def result = exec {
+                    executable = 'svn'
+                    args = [
+                        'propset',
+                        'svn:ignore',
+                        '-F',
+                        "${svnIgnoreFile}",
+                        "${task.project.name}"
+                    ]
+                    standardOutput = os
+                }
+                out = os.toString()
+            }
+            printOutInfo("java-development.svnIgnore", "Svn ignore applied as defined in ${svnIgnoreFile} to project ${task.project.name}.")
+        }
+    }
+}
+
+void printOutInfo(String taskName, String msg){
+    services.get(StyledTextOutputFactory).create(taskName).withStyle(Style.Info).println(msg)
+}
