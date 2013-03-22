@@ -48,12 +48,12 @@ task archiveDistribution(type: Tar, dependsOn: copyDistributionArchives)  {
     def artifactRevision="${artifactVersion}-R${revision}"
     from 'distribution'
     destinationDir = file("${distributionDir}/artifact-${artifactRevision}")
-    baseName = "perftence-distribution"
+    baseName = "chalkbox-distribution"
     version ="${artifactRevision}"
     extension = 'tar'
     doLast {
         def outputFactory = services.get(StyledTextOutputFactory).create("deployment.archiveDistribution")
-        outputFactory.withStyle(Style.Info).println("Archived distribution package can be found from file://${destinationDir}/perftence-distribution-${artifactRevision}.tar")
+        outputFactory.withStyle(Style.Info).println("Archived distribution package can be found from file://${destinationDir}/chalkbox-distribution-${artifactRevision}.tar")
     }
 }
 
