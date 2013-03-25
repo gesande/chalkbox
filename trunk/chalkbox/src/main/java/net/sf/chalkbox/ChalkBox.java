@@ -1,18 +1,14 @@
 package net.sf.chalkbox;
 
-@SuppressWarnings("static-method")
+import net.sf.chalkbox.ansi.AnsiTextColor;
+import net.sf.chalkbox.ansi.AnsiValue;
+import net.sf.chalkbox.ansi.AnsiValueAppender;
+
 public final class ChalkBox {
 
-    private static final String PREFIX = "\u001b[";
-    private static final String SUFFIX = "m";
-    private static final String END = PREFIX + SUFFIX;
+    private final static AnsiValueAppender ansiValueAppender = new AnsiValueAppender();
 
-    private enum AnsiColor {
-        Black, Red, Green, Yellow, Blue, Magenta, Cyan, White;
-
-        public int ansiValue() {
-            return ordinal() + 30;
-        }
+    public ChalkBox() {
     }
 
     public Chalk black() {
@@ -48,25 +44,28 @@ public final class ChalkBox {
     }
 
     private enum Chalks implements Chalk {
-        Black(AnsiColor.Black), Red(AnsiColor.Red), Green(AnsiColor.Green), Yellow(
-                AnsiColor.Yellow), Blue(AnsiColor.Blue), Magenta(
-                AnsiColor.Magenta), Cyan(AnsiColor.Cyan), White(AnsiColor.White);
+        Black(AnsiTextColor.Black), Red(AnsiTextColor.Red), Green(
+                AnsiTextColor.Green), Yellow(AnsiTextColor.Yellow), Blue(
+                AnsiTextColor.Blue), Magenta(AnsiTextColor.Magenta), Cyan(
+                AnsiTextColor.Cyan), White(AnsiTextColor.White);
 
-        private AnsiColor color;
+        private AnsiValue color;
 
-        private Chalks(final AnsiColor color) {
+        private Chalks(final AnsiValue color) {
             this.color = color;
         }
 
         @Override
         public String write(final String text) {
-            return new StringBuilder(PREFIX).append(ansiColor().ansiValue())
-                    .append(SUFFIX).append(text).append(END).toString();
+            return ansiValueAppender().append(text, ansiColor());
         }
 
-        private AnsiColor ansiColor() {
+        private AnsiValue ansiColor() {
             return this.color;
         }
     }
 
+    private static AnsiValueAppender ansiValueAppender() {
+        return ansiValueAppender;
+    }
 }
