@@ -4,6 +4,7 @@ import net.sf.chalkbox.ansi.AnsiTextColor;
 import net.sf.chalkbox.ansi.AnsiValue;
 import net.sf.chalkbox.ansi.AnsiValueAppender;
 
+@SuppressWarnings("static-method")
 public final class ChalkBox {
 
     private final static AnsiValueAppender ansiValueAppender = new AnsiValueAppender();
