@@ -3,15 +3,15 @@ ext.buildTemplates="$buildScripts/template"
 ext.buildPlugins="$buildScripts/plugins/"
 ext.libraryPlugin="$buildPlugins/library.gradle"
 ext.tmpDir="$projectDir/tmp"
-ext.reportDir="$projectDir/tmp"
+ext.reportDir="$projectDir/.cached/reports"
 ext.emmaPlugin="$buildPlugins/emma.gradle"
 ext.distributionPlugin="$buildPlugins/java-distribution.gradle"
-ext.distributionDir="$tmpDir"
+ext.distributionDir="$projectDir/.cached/distribution"
 ext.toolsDir="$projectDir/tools"
 ext.repositoryDir="$projectDir/repository"
 ext.svnIgnoreFile="$buildScripts/svn/svn-ignore"
 
-ext.artifactVersion='1.0.0'
+ext.artifactVersion='1.0.1'
 
 apply from: "$buildPlugins/java-development.gradle"
 apply from: "$buildPlugins/repositories.gradle"
@@ -39,11 +39,12 @@ subprojects {
 
 task continousBuild(type: GradleBuild) { Task task ->
     group = 'Verification'
-    description ='Continous build for the whole thing.'
+    description ='Continous build for the whole thing. Works also as a license to commit build target.'
     buildFile = 'build.gradle'
 
     tasks << 'chalkbox:clean'
     tasks << 'chalkbox:continous'
+    tasks << 'chalkbox:dist'
     tasks << 'aggregateTestReport'
     tasks << 'aggregateJDependReport'
     tasks << 'aggregateEmmaReport'
@@ -57,7 +58,6 @@ task distributionPackage(type: GradleBuild, dependsOn: ['continousBuild']) { Tas
     description = 'Distribution package for the whole thing including continous build.'
     buildFile = 'build.gradle'
 
-    tasks << 'chalkbox:clean'
     tasks << 'chalkbox:release'
     tasks << 'makeDistributionPackage'
 
