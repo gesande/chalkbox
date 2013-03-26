@@ -2,4 +2,6 @@ project(':junit-4.10') { prj ->
     apply from: "$libraryPlugin"
     prj.ext.library='junit-4.10.jar'
     prj.ext.librarySources='junit-4.10-src.jar'
+
+    version = "1.0.0"
 }
