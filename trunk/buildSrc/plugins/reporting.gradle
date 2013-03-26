@@ -3,6 +3,8 @@ import static org.gradle.logging.StyledTextOutput.Style
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.FileTree
+import org.gradle.api.tasks.bundling.Compression
+import org.gradle.api.tasks.bundling.Tar
 import org.gradle.logging.StyledTextOutput
 import org.gradle.logging.StyledTextOutputFactory
 
@@ -177,6 +179,26 @@ task aggregateFindBugsReport { Task task ->
         def outputFactory = services.get(StyledTextOutputFactory).create("reporting.aggregateFindBugsReport")
         outputFactory.withStyle(Style.Info).println("Findbugs report can be found from file://${targetDir}/index.html)")
     }
+}
+
+task archiveAggregateReports(type: Tar) { Tar task ->
+    group = 'Archive'
+    description = 'Archive aggregate reports including junit tests/pmd/findbugs/jdepend'
+    from ("$reportDir")
+    // Set destination directory.
+    destinationDir = file("$cacheDir")
+    // Set filename properties.
+    baseName = "report-artifacts-" + artifactVersion
+    extension = 'tar.gz'
+    compression = Compression.GZIP
+
+    doLast {
+        def String tarFile = "${cacheDir}/report-artifacts-${artifactVersion}.tar.gz"
+        printOutInfo("artifact.archiveAggregateReports", "Report artifact archive can be found from file://$tarFile")
+    }
+}
+void printOutInfo(String taskName, String msg) {
+    services.get(StyledTextOutputFactory).create(taskName).withStyle(Style.Info).println(msg)
 }
 
 private void echo(final String msg) {

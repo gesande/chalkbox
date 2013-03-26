@@ -1,0 +1,12 @@
+apply from: "$buildPlugins/continous.gradle"
+apply from: "$buildPlugins/codeAnalysis.gradle"
+apply from: "$buildPlugins/eclipseJdt.gradle"
+apply from: "$buildPlugins/eclipseClasspath.gradle"
+
+version = "$artifactVersion"
+
+task "showVersion" {
+    group 'Misc'
+    description 'Prints out the version.'
+    doLast {  println version }
+}
