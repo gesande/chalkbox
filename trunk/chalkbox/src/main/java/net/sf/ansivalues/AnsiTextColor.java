@@ -1,4 +1,4 @@
-package net.sf.chalkbox.ansi;
+package net.sf.ansivalues;
 
 public enum AnsiTextColor implements AnsiValue {
     Black, Red, Green, Yellow, Blue, Magenta, Cyan, White;

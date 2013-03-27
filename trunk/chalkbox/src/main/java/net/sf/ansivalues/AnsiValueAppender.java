@@ -1,4 +1,4 @@
-package net.sf.chalkbox.ansi;
+package net.sf.ansivalues;
 
 public class AnsiValueAppender {
     private static final String PREFIX = "\u001b[";

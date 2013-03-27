@@ -1,8 +1,8 @@
 package net.sf.chalkbox;
 
-import net.sf.chalkbox.ansi.AnsiTextColor;
-import net.sf.chalkbox.ansi.AnsiValue;
-import net.sf.chalkbox.ansi.AnsiValueAppender;
+import net.sf.ansivalues.AnsiTextColor;
+import net.sf.ansivalues.AnsiValue;
+import net.sf.ansivalues.AnsiValueAppender;
 
 @SuppressWarnings("static-method")
 public final class ChalkBox {
