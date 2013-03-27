@@ -1,0 +1,15 @@
+DONE
+extracted chalkbox from perftence
+extracted ansi stuff into its own package
+introduced marker 
+introduced examples for creating screenshot
+introduced example module
+introduced two separate examples
+
+IN PROGRESS
+
+WAITING
+provide gradle stuff for running all examples
+provide shell scripts for running examples (using distribution)
+provide java backlogging using mybacklog
+

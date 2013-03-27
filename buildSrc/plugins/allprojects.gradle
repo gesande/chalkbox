@@ -16,6 +16,7 @@ task continousBuild(type: GradleBuild) { Task task ->
     tasks << 'clean'
     tasks << 'chalkbox:continous'
     tasks << 'chalkbox:dist'
+    tasks << 'example:dist'
     tasks << 'aggregateTestReport'
     tasks << 'aggregateJDependReport'
     tasks << 'aggregateEmmaReport'
@@ -30,6 +31,7 @@ task distributionPackage(type: GradleBuild, dependsOn: ['continousBuild']) { Tas
     buildFile = 'build.gradle'
 
     tasks << 'chalkbox:release'
+    tasks << 'example:release'
     tasks << 'archiveAggregateReports'
     tasks << 'makeDistributionPackage'
 
