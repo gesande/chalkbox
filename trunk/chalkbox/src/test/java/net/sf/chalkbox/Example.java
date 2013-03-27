@@ -42,14 +42,14 @@ public class Example {
         final StringBuilder sb = new StringBuilder();
         final Marker marker = new Marker();
         appendText(sb, marker.mark("marked plain"));
-        appendText(sb, box.black(), marker, "black");
-        appendText(sb, box.red(), marker, "red");
-        appendText(sb, box.green(), marker, "green");
-        appendText(sb, box.yellow(), marker, "yellow");
-        appendText(sb, box.blue(), marker, "blue");
-        appendText(sb, box.magenta(), marker, "magenta");
-        appendText(sb, box.cyan(), marker, "cyan");
-        appendText(sb, box.white(), marker, "white");
+        appendText(sb, box.black(), marker, "marked");
+        appendText(sb, box.red(), marker, "marked");
+        appendText(sb, box.green(), marker, "marked");
+        appendText(sb, box.yellow(), marker, "marked");
+        appendText(sb, box.blue(), marker, "marked");
+        appendText(sb, box.magenta(), marker, "marked");
+        appendText(sb, box.cyan(), marker, "marked");
+        appendText(sb, box.white(), marker, "marked");
 
         final FileOutputStream out = new FileOutputStream(new File("./target",
                 "marker-example"));
