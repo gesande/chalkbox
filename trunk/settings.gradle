@@ -1,1 +1,1 @@
-include 'junit-4.10','chalkbox'
+include 'junit-4.10','chalkbox','example'
