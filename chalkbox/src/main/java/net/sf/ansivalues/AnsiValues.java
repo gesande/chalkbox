@@ -1,4 +1,4 @@
-package net.sf.chalkbox.ansi;
+package net.sf.ansivalues;
 
 public enum AnsiValues implements AnsiValue {
     ReverseVideo {

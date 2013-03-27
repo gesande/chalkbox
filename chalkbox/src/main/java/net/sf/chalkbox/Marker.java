@@ -1,7 +1,7 @@
 package net.sf.chalkbox;
 
-import net.sf.chalkbox.ansi.AnsiValueAppender;
-import net.sf.chalkbox.ansi.AnsiValues;
+import net.sf.ansivalues.AnsiValueAppender;
+import net.sf.ansivalues.AnsiValues;
 
 public final class Marker {
 
