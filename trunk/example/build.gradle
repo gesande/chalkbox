@@ -4,3 +4,34 @@ project(':example') {
     apply from:"$distributionPlugin"
     dependencies { compile project(':chalkbox') }
 }
+
+task chalkExample(dependsOn: classes) {
+    group = 'Example'
+    description = 'Shows the chalk output example.'
+    doLast {
+        javaexec {
+            main = 'net.sf.chalkbox.ChalkExample'
+            classpath  sourceSets.main.output.classesDir
+            classpath configurations.runtime
+        }
+    }
+}
+
+task markerExample(dependsOn: classes) {
+    group = 'Example'
+    description = 'Shows the marker output example.'
+    doLast {
+        javaexec {
+            main = 'net.sf.chalkbox.MarkerExample'
+            classpath  sourceSets.main.output.classesDir
+            classpath configurations.runtime
+        }
+    }
+}
+
+task showExamples() {
+    group = 'Example'
+    description = 'Shows all example outputs.'
+    dependsOn 'chalkExample','markerExample'
+    doLast{ println "See the examples above.'" }
+}
