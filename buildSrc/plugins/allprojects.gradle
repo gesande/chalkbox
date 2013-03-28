@@ -1,3 +1,5 @@
+import net.sf.chalkbox.build.AntBuildFileGenerator
+
 import org.gradle.api.Task
 import org.gradle.api.tasks.GradleBuild
 
@@ -37,4 +39,14 @@ task distributionPackage(type: GradleBuild, dependsOn: ['continousBuild']) { Tas
     tasks << 'makeDistributionPackage'
 
     doLast { println "Distribution package ready to be uploaded to the repository." }
+}
+
+task exportAntBuildFile() { Task task ->
+    group = 'Build'
+    description = 'Creates a ant build file for the project which contains the most important targets.'
+    doLast {
+        AntBuildFileGenerator generator = new AntBuildFileGenerator()
+        generator.generate(file("buildSrc"),"continousBuild", "distributionPackage", "eclipseSettings", "exportAntBuildFile")
+       
+    }
 }

@@ -19,4 +19,9 @@
 			<arg value="eclipseSettings" />
 		</exec>
 	</target>
+	<target name="exportAntBuildFile">
+		<exec executable="${gradle.executable}" dir=".">
+			<arg value="exportAntBuildFile" />
+		</exec>
+	</target>
 </project>
