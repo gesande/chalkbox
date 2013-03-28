@@ -46,7 +46,6 @@ task exportAntBuildFile() { Task task ->
     description = 'Creates a ant build file for the project which contains the most important targets.'
     doLast {
         AntBuildFileGenerator generator = new AntBuildFileGenerator()
-        generator.generate(file("buildSrc"),"continousBuild", "distributionPackage", "eclipseSettings", "exportAntBuildFile")
-       
+        generator.generate(file("buildSrc"),"chalkbox.xml", "continousBuild", "distributionPackage", "eclipseSettings", "exportAntBuildFile")
     }
 }

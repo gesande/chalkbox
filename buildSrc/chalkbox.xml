@@ -1,3 +1,4 @@
+<!-- NOTE this is generated but versioned file -->
 <project name="gradle" default="continousBuild" basedir="..\">
 	<description description="Build entrypoints">
 	</description>
