@@ -1,4 +1,4 @@
-<project name="gradle" default="" basedir="../">
+<project name="gradle" default="continousBuild" basedir="../">
 	<description description="Build entrypoints">
 	</description>
 	<!-- set global properties for this build -->
