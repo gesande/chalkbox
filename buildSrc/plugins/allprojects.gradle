@@ -17,6 +17,7 @@ task continousBuild(type: GradleBuild) { Task task ->
     description ='Continous build for the whole thing. Works also as a license to commit build target.'
     buildFile = 'build.gradle'
     tasks << 'clean'
+    tasks << 'exportAntBuildFile'
     tasks << 'chalkbox:continous'
     tasks << 'chalkbox:dist'
     tasks << 'example:dist'
