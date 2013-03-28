@@ -7,17 +7,20 @@ import java.io.IOException;
 
 public class AntBuildFileGenerator {
 
-    public void generate(final File parent, final String defaultTarget,
-            final String... targets) {
+    public void generate(final File parent, final String buildfileName,
+            final String defaultTarget, final String... targets) {
         if (!parent.exists()) {
             throw new RuntimeException("Given parent directory doesn't exist!");
         }
-        writeBuildFile(parent, contentsOfAntBuildFile(defaultTarget, targets));
+        writeBuildFile(parent, contentsOfAntBuildFile(defaultTarget, targets),
+                buildfileName);
     }
 
     private StringBuilder contentsOfAntBuildFile(final String defaultTarget,
             final String... targets) {
         final StringBuilder sb = new StringBuilder();
+        sb.append("<!-- NOTE this is generated but versioned file -->").append(
+                newLine());
         sb.append("<project name=\"gradle\" default=\"").append(defaultTarget)
                 .append("\" basedir=\"..\\\">").append(newLine());
         sb.append(tab())
@@ -33,7 +36,7 @@ public class AntBuildFileGenerator {
                 .append("<property name=\"gradle.executable\" location=\"${env.GRADLE_HOME}/bin/gradle\" />")
                 .append(newLine());
 
-        if(defaultTarget!=null && !defaultTarget.isEmpty()) { 
+        if (defaultTarget != null && !defaultTarget.isEmpty()) {
             appendTarget(sb, defaultTarget);
         }
         for (final String target : targets) {
@@ -43,15 +46,13 @@ public class AntBuildFileGenerator {
     }
 
     private void appendTarget(final StringBuilder sb, final String target) {
-        sb.append(tab()).append("<target name=\"").append(target)
-                .append("\">").append(newLine());
-        sb.append(tab())
-                .append(tab())
+        sb.append(tab()).append("<target name=\"").append(target).append("\">")
+                .append(newLine());
+        sb.append(tab()).append(tab())
                 .append("<exec executable=\"${gradle.executable}\" dir=\".\">")
                 .append(newLine());
-        sb.append(tab()).append(tab()).append(tab())
-                .append("<arg value=\"").append(target).append("\" />")
-                .append(newLine());
+        sb.append(tab()).append(tab()).append(tab()).append("<arg value=\"")
+                .append(target).append("\" />").append(newLine());
         sb.append(tab()).append(tab()).append("</exec>").append(newLine());
         sb.append(tab()).append("</target>").append(newLine());
     }
@@ -73,12 +74,13 @@ public class AntBuildFileGenerator {
     }
 
     private static void writeBuildFile(final File file,
-            final StringBuilder contents) {
-        writeBuildFile(newBufferedWriter(newBuildFile(file)), contents);
+            final StringBuilder contents, String buildfileName) {
+        writeBuildFile(newBufferedWriter(newBuildFile(file, buildfileName)),
+                contents);
     }
 
-    private static File newBuildFile(final File file) {
-        return new File(file, "chalkbox.xml");
+    private static File newBuildFile(final File file, String buildfileName) {
+        return new File(file, buildfileName);
     }
 
     private static void writeBuildFile(final BufferedWriter out,
