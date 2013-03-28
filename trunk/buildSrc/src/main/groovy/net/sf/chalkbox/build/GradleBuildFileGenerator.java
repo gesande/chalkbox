@@ -1,23 +1,40 @@
 package net.sf.chalkbox.build;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 public class GradleBuildFileGenerator {
 
+    private final FileWriter fileWriter;
+
+    public GradleBuildFileGenerator() {
+        this.fileWriter = new FileWriter();
+    }
+
     @SuppressWarnings("static-method")
     public void forJavaProject(final File file, final String name) {
         makingSureParentDirectoryExists(file, name);
-        writeGradleBuildFile(file, javaProjectContents(name));
+        writeToFile(file, javaProjectContents(name).toString(), "build.gradle");
+    }
+
+    private void writeToFile(final File parent, final String contents,
+            final String buildFile) {
+        try {
+            fileWriter().writeToFile(parent, contents, buildFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @SuppressWarnings("static-method")
     public void forJavaLibProject(final File file, final String name) {
         makingSureParentDirectoryExists(file, name);
-        writeGradleBuildFile(file, javaLibProjectContents(name));
+        writeToFile(file, javaLibProjectContents(name).toString(),
+                "build.gradle");
+    }
 
+    private FileWriter fileWriter() {
+        return fileWriter;
     }
 
     private static StringBuilder javaProjectContents(final String name) {
@@ -55,14 +72,6 @@ public class GradleBuildFileGenerator {
         return "    ";
     }
 
-    private static BufferedWriter newBufferedWriter(final File buildFile) {
-        try {
-            return new BufferedWriter(new FileWriter(buildFile));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private static void makingSureParentDirectoryExists(final File file,
             final String name) {
         if (!file.exists()) {
@@ -70,31 +79,6 @@ public class GradleBuildFileGenerator {
                 throw new RuntimeException(
                         "Not able to create the parent directories for '"
                                 + name + "'! Need to exit.");
-            }
-        }
-    }
-
-    private static void writeGradleBuildFile(final File file,
-            final StringBuilder contents) {
-        writeGradleBuildFile(newBufferedWriter(newGradleBuildFile(file)),
-                contents);
-    }
-
-    private static File newGradleBuildFile(final File file) {
-        return new File(file, "build.gradle");
-    }
-
-    private static void writeGradleBuildFile(final BufferedWriter out,
-            final StringBuilder javaProjectContents) {
-        try {
-            out.write(javaProjectContents.toString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                out.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
         }
     }

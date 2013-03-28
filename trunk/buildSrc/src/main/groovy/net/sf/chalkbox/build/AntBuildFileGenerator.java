@@ -1,19 +1,32 @@
 package net.sf.chalkbox.build;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 public class AntBuildFileGenerator {
+
+    private final FileWriter fileWriter;
+
+    public AntBuildFileGenerator() {
+        fileWriter = new FileWriter();
+    }
 
     public void generate(final File parent, final String buildfileName,
             final String defaultTarget, final String... targets) {
         if (!parent.exists()) {
             throw new RuntimeException("Given parent directory doesn't exist!");
         }
-        writeBuildFile(parent, contentsOfAntBuildFile(defaultTarget, targets),
-                buildfileName);
+        writeToFile(parent, contentsOfAntBuildFile(defaultTarget, targets)
+                .toString(), buildfileName);
+    }
+
+    private void writeToFile(final File parent, final String contents,
+            final String buildFile) {
+        try {
+            fileWriter().writeToFile(parent, contents, buildFile);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private StringBuilder contentsOfAntBuildFile(final String defaultTarget,
@@ -65,37 +78,7 @@ public class AntBuildFileGenerator {
         return "\t";
     }
 
-    private static BufferedWriter newBufferedWriter(final File buildFile) {
-        try {
-            return new BufferedWriter(new FileWriter(buildFile));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private FileWriter fileWriter() {
+        return this.fileWriter;
     }
-
-    private static void writeBuildFile(final File file,
-            final StringBuilder contents, String buildfileName) {
-        writeBuildFile(newBufferedWriter(newBuildFile(file, buildfileName)),
-                contents);
-    }
-
-    private static File newBuildFile(final File file, String buildfileName) {
-        return new File(file, buildfileName);
-    }
-
-    private static void writeBuildFile(final BufferedWriter out,
-            final StringBuilder javaProjectContents) {
-        try {
-            out.write(javaProjectContents.toString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                out.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
 }
