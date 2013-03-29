@@ -4,7 +4,10 @@
 	</description>
 	<!-- set global properties for this build -->
 	<property environment="env" />
-	<property name="gradle.executable" location="${env.GRADLE_HOME}/bin/gradle" />
+	<condition property="gradle-exec" value="gradle.base" else="gradle">
+		<os family="windows" />
+	</condition>
+	<property name="gradle.executable" location="${env.GRADLE_HOME}/bin/${gradle-exec}" />
 	<target name="continousBuild">
 		<exec executable="${gradle.executable}" dir=".">
 			<arg value="continousBuild" />
