@@ -39,7 +39,7 @@ public class GradleBuildFileGenerator {
 
     private static StringBuilder javaProjectContents(final String name) {
         final StringBuilder sb = new StringBuilder("project(':").append(name)
-                .append("' {").append("\n")
+                .append("') {").append("\n")
 
                 .append(tab()).append("apply from: \"$emmaPlugin\"")
                 .append("\n")
