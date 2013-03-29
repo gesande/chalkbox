@@ -3,11 +3,11 @@ package net.sf.chalkbox.build;
 import java.io.File;
 import java.io.IOException;
 
-public class AntBuildFileGenerator {
+public class AntBuildFileGeneratorForGradle {
 
     private final FileWriter fileWriter;
 
-    public AntBuildFileGenerator() {
+    public AntBuildFileGeneratorForGradle() {
         fileWriter = new FileWriter();
     }
 
