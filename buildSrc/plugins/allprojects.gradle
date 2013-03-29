@@ -1,4 +1,4 @@
-import net.sf.chalkbox.build.AntBuildFileGenerator
+import net.sf.chalkbox.build.AntBuildFileGeneratorForGradle
 
 import org.gradle.api.Task
 import org.gradle.api.tasks.GradleBuild
@@ -46,7 +46,7 @@ task exportAntBuildFile() { Task task ->
     group = 'Build'
     description = 'Creates a ant build file for the project which contains the most important targets.'
     doLast {
-        AntBuildFileGenerator generator = new AntBuildFileGenerator()
+        AntBuildFileGeneratorForGradle generator = new AntBuildFileGeneratorForGradle()
         generator.generate(file("buildSrc"),"chalkbox.xml", "continousBuild", "distributionPackage", "eclipseSettings", "exportAntBuildFile")
     }
 }
