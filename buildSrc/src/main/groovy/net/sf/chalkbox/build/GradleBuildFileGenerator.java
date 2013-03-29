@@ -11,7 +11,6 @@ public class GradleBuildFileGenerator {
         this.fileWriter = new FileWriter();
     }
 
-    @SuppressWarnings("static-method")
     public void forJavaProject(final File file, final String name) {
         makingSureParentDirectoryExists(file, name);
         writeToFile(file, javaProjectContents(name).toString(), "build.gradle");
@@ -26,7 +25,6 @@ public class GradleBuildFileGenerator {
         }
     }
 
-    @SuppressWarnings("static-method")
     public void forJavaLibProject(final File file, final String name) {
         makingSureParentDirectoryExists(file, name);
         writeToFile(file, javaLibProjectContents(name).toString(),
@@ -34,7 +32,7 @@ public class GradleBuildFileGenerator {
     }
 
     private FileWriter fileWriter() {
-        return fileWriter;
+        return this.fileWriter;
     }
 
     private static StringBuilder javaProjectContents(final String name) {

@@ -8,7 +8,7 @@ public class AntBuildFileGeneratorForGradle {
     private final FileWriter fileWriter;
 
     public AntBuildFileGeneratorForGradle() {
-        fileWriter = new FileWriter();
+        this.fileWriter = new FileWriter();
     }
 
     public void generate(final File parent, final String buildfileName,
@@ -29,8 +29,8 @@ public class AntBuildFileGeneratorForGradle {
         }
     }
 
-    private StringBuilder contentsOfAntBuildFile(final String defaultTarget,
-            final String... targets) {
+    private static StringBuilder contentsOfAntBuildFile(
+            final String defaultTarget, final String... targets) {
         final StringBuilder sb = new StringBuilder();
         sb.append("<!-- NOTE this is generated but versioned file -->").append(
                 newLine());
@@ -64,7 +64,7 @@ public class AntBuildFileGeneratorForGradle {
         return sb.append("</project>").append(newLine());
     }
 
-    private void appendTarget(final StringBuilder sb, final String target) {
+    private static void appendTarget(final StringBuilder sb, final String target) {
         sb.append(tab()).append("<target name=\"").append(target).append("\">")
                 .append(newLine());
         sb.append(tab()).append(tab())
@@ -76,7 +76,7 @@ public class AntBuildFileGeneratorForGradle {
         sb.append(tab()).append("</target>").append(newLine());
     }
 
-    private String newLine() {
+    private static String newLine() {
         return "\n";
     }
 
