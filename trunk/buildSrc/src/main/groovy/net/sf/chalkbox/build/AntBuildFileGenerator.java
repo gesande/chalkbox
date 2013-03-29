@@ -46,7 +46,13 @@ public class AntBuildFileGenerator {
         sb.append(tab()).append("<property environment=\"env\" />")
                 .append(newLine());
         sb.append(tab())
-                .append("<property name=\"gradle.executable\" location=\"${env.GRADLE_HOME}/bin/gradle\" />")
+                .append("<condition property=\"gradle-exec\" value=\"gradle.base\" else=\"gradle\">")
+                .append(newLine());
+        sb.append(tab()).append(tab()).append("<os family=\"windows\" />")
+                .append(newLine());
+        sb.append(tab()).append("</condition>").append(newLine());
+        sb.append(tab())
+                .append("<property name=\"gradle.executable\" location=\"${env.GRADLE_HOME}/bin/${gradle-exec}\" />")
                 .append(newLine());
 
         if (defaultTarget != null && !defaultTarget.isEmpty()) {
