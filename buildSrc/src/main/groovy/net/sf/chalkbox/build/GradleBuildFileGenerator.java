@@ -53,7 +53,7 @@ public class GradleBuildFileGenerator {
 
     private static StringBuilder javaLibProjectContents(final String name) {
         final StringBuilder sb = new StringBuilder("project(':").append(name)
-                .append("' { prj ->").append("\n")
+                .append("') { prj ->").append("\n")
 
                 .append(tab()).append("apply from: \"$libraryPlugin\"")
                 .append("\n")
