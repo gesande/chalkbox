@@ -28,4 +28,9 @@
 			<arg value="exportAntBuildFile" />
 		</exec>
 	</target>
+	<target name="refreshBuildFileGenerator">
+		<exec executable="${gradle.executable}" dir=".">
+			<arg value="refreshBuildFileGenerator" />
+		</exec>
+	</target>
 </project>

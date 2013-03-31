@@ -47,6 +47,26 @@ task exportAntBuildFile() { Task task ->
     description = 'Creates a ant build file for the project which contains the most important targets.'
     doLast {
         AntBuildFileGeneratorForGradle generator = new AntBuildFileGeneratorForGradle()
-        generator.generate(file("buildSrc"),"chalkbox.xml", "continousBuild", "distributionPackage", "eclipseSettings", "exportAntBuildFile")
+        generator.generate(file("buildSrc"),"chalkbox.xml", "continousBuild", "distributionPackage", "eclipseSettings", "exportAntBuildFile", "refreshBuildFileGenerator")
+    }
+}
+
+task buildBuildFileGenerator(type: GradleBuild) { GradleBuild task ->
+   tasks << 'buildfile-generator:continous'
+   tasks << 'buildfile-generator:release'
+}
+task refreshBuildFileGenerator(dependsOn: ['buildBuildFileGenerator']) { Task task ->
+    group = 'Build'
+    description = 'Builds jar and sources-jar for buildfile-generator and copies the files to buildSrc lib/lib-sources directory.'
+    doLast {
+        def artifact = "buildfile-generator-1.0.0"
+        copy {
+            from 'buildfile-generator/build/libs/${artifact}.jar'
+            into 'buildSrc/lib'
+        }
+        copy {
+            from 'buildfile-generator/build/libs/${artifact}-sources.jar'
+            into 'buildSrc/lib-sources'
+        }
     }
 }
