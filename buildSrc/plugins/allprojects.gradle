@@ -52,21 +52,28 @@ task exportAntBuildFile() { Task task ->
 }
 
 task buildBuildFileGenerator(type: GradleBuild) { GradleBuild task ->
-   tasks << 'buildfile-generator:continous'
-   tasks << 'buildfile-generator:release'
+    group = 'Build'
+    description = 'Runs continous and release to buildfile-generator module.'
+
+    tasks << 'buildfile-generator:continous'
+    tasks << 'buildfile-generator:release'
 }
+
 task refreshBuildFileGenerator(dependsOn: ['buildBuildFileGenerator']) { Task task ->
     group = 'Build'
     description = 'Builds jar and sources-jar for buildfile-generator and copies the files to buildSrc lib/lib-sources directory.'
     doLast {
         def artifact = "buildfile-generator-1.0.0"
+        def libs= file('buildfile-generator/build/libs')
+        def lib = file('buildSrc/lib')
+        def libSources = file('buildSrc/lib-sources') 
         copy {
-            from 'buildfile-generator/build/libs/${artifact}.jar'
-            into 'buildSrc/lib'
+            from "${libs}/${artifact}.jar"
+            into lib
         }
         copy {
-            from 'buildfile-generator/build/libs/${artifact}-sources.jar'
-            into 'buildSrc/lib-sources'
+            from "${libs}/${artifact}-sources.jar"
+            into libSources 
         }
     }
 }
