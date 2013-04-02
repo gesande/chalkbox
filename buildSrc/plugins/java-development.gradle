@@ -118,6 +118,7 @@ subprojects {
             printOutInfo("java-development.svnIgnore", "Svn ignore applied as defined in ${svnIgnoreFile} to project ${task.project.name}.")
         }
     }
+
     task buildGradleForJavaProject(type: ExportGradleBuildFileForNewJavaProject){ ExportGradleBuildFileForNewJavaProject task ->
         group 'Development'
         description "Creates a template build.gradle for new java project."
