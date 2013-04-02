@@ -13,6 +13,6 @@ public class ExportGradleBuildFileForNewJavaProject extends DefaultTask{
     def exportBuildFile() {
         def GradleBuildFileGenerator generator =new GradleBuildFileGenerator()
         generator.forJavaProject(parent, projectName)
-        services.get(StyledTextOutputFactory).create("buildGradleForJavaProject").withStyle(Style.Info).println("build.gradle successfully created for project '${projectName}'.")
+        services.get(StyledTextOutputFactory).create("buildGradleForJavaProject").withStyle(Style.Info).println("Build file build.gradle successfully created for project '${projectName}'.")
     }
 }
