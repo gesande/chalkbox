@@ -1,3 +1,4 @@
+import net.sf.chalkbox.build.ExportGradleBuildFileForNewJavaProject
 import net.sf.chalkbox.build.GradleBuildFileGenerator
 
 import org.gradle.api.Task
@@ -117,14 +118,12 @@ subprojects {
             printOutInfo("java-development.svnIgnore", "Svn ignore applied as defined in ${svnIgnoreFile} to project ${task.project.name}.")
         }
     }
-    task buildGradleForJavaProject { Task task ->
+    task buildGradleForJavaProject(type: ExportGradleBuildFileForNewJavaProject){ ExportGradleBuildFileForNewJavaProject task ->
         group 'Development'
         description "Creates a template build.gradle for new java project."
-        doLast {
-            def GradleBuildFileGenerator generator =new GradleBuildFileGenerator()
-            generator.forJavaProject(task.project.projectDir, "${task.project.name}")
-            printOutInfo("java-development.buildGradleForJavaProject", "build.gradle successfully created for ${task.project.name}.")
-        }
+
+        parent = task.project.projectDir
+        projectName = task.project.name
     }
 
     task buildGradleForJavaLibProject { Task task ->

@@ -1,4 +1,4 @@
-import net.sf.chalkbox.build.AntBuildFileGeneratorForGradle
+import net.sf.chalkbox.build.ExportAntBuildFileTask
 
 import org.gradle.api.Task
 import org.gradle.api.tasks.GradleBuild
@@ -43,13 +43,18 @@ task distributionPackage(type: GradleBuild, dependsOn: ['continousBuild']) { Tas
     doLast { println "Distribution package ready to be uploaded to the repository." }
 }
 
-task exportAntBuildFile() { Task task ->
+task exportAntBuildFile(type: ExportAntBuildFileTask)  { ExportAntBuildFileTask task ->
     group = 'Build'
     description = 'Creates a ant build file for the project which contains the most important targets.'
-    doLast {
-        AntBuildFileGeneratorForGradle generator = new AntBuildFileGeneratorForGradle()
-        generator.generate(file("buildSrc"),"chalkbox.xml", "continousBuild", "distributionPackage", "eclipseSettings", "exportAntBuildFile", "refreshBuildFileGenerator")
-    }
+    parent = "buildSrc"
+    buildFilename= "chalkbox.xml"
+    defaultTarget= "continousBuild"
+    targets = [
+        "distributionPackage",
+        "eclipseSettings",
+        "exportAntBuildFile",
+        "refreshBuildFileGenerator"
+    ]
 }
 
 task buildBuildFileGenerator(type: GradleBuild) { GradleBuild task ->
@@ -67,14 +72,14 @@ task refreshBuildFileGenerator(dependsOn: ['buildBuildFileGenerator']) { Task ta
         def artifact = "buildfile-generator-1.0.0"
         def libs= file('buildfile-generator/build/libs')
         def lib = file('buildSrc/lib')
-        def libSources = file('buildSrc/lib-sources') 
+        def libSources = file('buildSrc/lib-sources')
         copy {
             from "${libs}/${artifact}.jar"
             into lib
         }
         copy {
             from "${libs}/${artifact}-sources.jar"
-            into libSources 
+            into libSources
         }
     }
 }
