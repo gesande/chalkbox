@@ -3,5 +3,8 @@ project(':buildfile-generator') {
     apply from: "$distributionPlugin"
     version ='1.0.0'
     tasks.withType(FindBugs){ ignoreFailures = true }
+
     dependencies { testCompile project(':junit-4.10') }
+
+    //rootProject.dependencies { runtime project(path) }
 }
