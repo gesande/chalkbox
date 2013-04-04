@@ -1,5 +1,4 @@
-import net.sf.chalkbox.build.ExportGradleBuildFileForJavaLibraryProject
-import net.sf.chalkbox.build.ExportGradleBuildFileForNewJavaProject
+import net.sf.chalkbox.build.JavaDevelopmentPlugin
 
 import org.gradle.api.Task
 import org.gradle.api.tasks.GradleBuild
@@ -9,6 +8,33 @@ import org.gradle.logging.StyledTextOutput.Style
 
 apply plugin: "java"
 
+subprojects {
+    apply plugin: JavaDevelopmentPlugin
+
+    task applySvnIgnore() { Task task ->
+        group 'Development'
+        description "Applies SVN ignore based on contents in ${svnIgnoreFile}."
+        doLast {
+            def out= ""
+            new ByteArrayOutputStream().withStream { os ->
+                def result =project.exec {
+                    executable = 'svn'
+                    args = [
+                        'propset',
+                        'svn:ignore',
+                        '-F',
+                        "${svnIgnoreFile}",
+                        "${task.project.name}"
+                    ]
+                    standardOutput = os
+                }
+                out = os.toString()
+            }
+            services.get(StyledTextOutputFactory).create("java-development.svnIgnore").withStyle(Style.Info).println("Svn ignore applied as defined in ${svnIgnoreFile} to project ${task.project.name}.")
+        }
+    }
+}
+
 task newJavaProject(type: GradleBuild ) { GradleBuild task ->
     group ='Development'
     description ="Creates a new Java project putting it already to SVN and applying some SVN ignore magic from predefined file which seem to be ${svnIgnoreFile}. Needs -PnewJavaProject argument."
@@ -17,8 +43,8 @@ task newJavaProject(type: GradleBuild ) { GradleBuild task ->
     String createJavaDirs = "${javaProject}:createJavaDirs"
     String eclipseSettingsFor = "${javaProject}:eclipseSettingsFor"
     String buildGradle = "${javaProject}:buildGradleForJavaProject"
-    String svnAdd = "${javaProject}:svnAdd"
-    String svnIgnore = "${javaProject}:svnIgnore"
+    String svnAdd = "${javaProject}:addProjectToSvn"
+    String svnIgnore = "${javaProject}:applySvnIgnore"
 
     task.tasks << createJavaDirs
     task.tasks << svnAdd
@@ -33,12 +59,12 @@ task newJavaProject(type: GradleBuild ) { GradleBuild task ->
 
 task newJavaLibProject(type: GradleBuild) { GradleBuild task ->
     group ='Development'
-    description ="Creates a new Java library project putting it already to SVN and applying some SVN ignore magic from predefined file which seem to be ${svnIgnoreFile}."
+    description ="Creates a new Java library project putting it already to SVN and applying some SVN ignore magic from predefined file which seem to be ${svnIgnoreFile}. Needs -PnewJavaProject argument."
     def javaProject =  task.project.properties.newJavaProject
     String createJavaDirs = "${javaProject}:createJavaDirs"
     String eclipseSettingsFor = "${javaProject}:eclipseSettingsFor"
-    String svnAdd = "${javaProject}:svnAdd"
-    String svnIgnore = "${javaProject}:svnIgnore"
+    String svnAdd = "${javaProject}:addProjectToSvn"
+    String svnIgnore = "${javaProject}:applySvnIgnore"
     String createLibDirs="${javaProject}:createLibDirs"
     String buildGradle = "${javaProject}:buildGradleForJavaLibProject"
 
@@ -51,82 +77,6 @@ task newJavaLibProject(type: GradleBuild) { GradleBuild task ->
 
     doLast {
         printOutInfo("java-development.newJavaProject", "New Java project can now be found from ${task.project.buildDir}/${javaProject}")
-    }
-}
-
-subprojects {
-
-    task createLibDirs  { Task task ->
-        group 'Development'
-        description 'Creates lib and lib-sources -directories under the given project.'
-        doLast {
-            def libDir = new File(task.project.projectDir, 'lib')
-            libDir.mkdirs()
-            def libSourcesDir = new File(task.project.projectDir, 'lib-sources')
-            libSourcesDir.mkdirs()
-        }
-    }
-
-    task createJavaDirs() { Task task ->
-        group 'Development'
-        description 'Create directory structures for a Java project.'
-        doLast {
-            sourceSets*.java.srcDirs*.each { it.mkdirs() }
-            sourceSets*.resources.srcDirs*.each { it.mkdirs() }
-        }
-    }
-
-    task svnAdd { Task task ->
-        group 'Development'
-        description 'Add project to SVN.'
-        doLast {
-            def out= ""
-            new ByteArrayOutputStream().withStream { os ->
-                def result = exec {
-                    executable = 'svn'
-                    args = [
-                        'add',
-                        "${task.project.name}"
-                    ]
-                    standardOutput = os
-                }
-                out = os.toString()
-            }
-            printOutInfo("java-development.svnAdd", "Project ${task.project.name} was added to SVN")
-        }
-    }
-
-    task svnIgnore { Task task ->
-        group 'Development'
-        description "Applies SVN ignore based on contents in ${svnIgnoreFile}."
-        doLast {
-            def out= ""
-            new ByteArrayOutputStream().withStream { os ->
-                def result = exec {
-                    executable = 'svn'
-                    args = [
-                        'propset',
-                        'svn:ignore',
-                        '-F',
-                        "${svnIgnoreFile}",
-                        "${task.project.name}"
-                    ]
-                    standardOutput = os
-                }
-                out = os.toString()
-            }
-            printOutInfo("java-development.svnIgnore", "Svn ignore applied as defined in ${svnIgnoreFile} to project ${task.project.name}.")
-        }
-    }
-
-    task buildGradleForJavaProject(type: ExportGradleBuildFileForNewJavaProject){ ExportGradleBuildFileForNewJavaProject task ->
-        parent = task.project.projectDir
-        projectName = task.project.name
-    }
-
-    task buildGradleForJavaLibProject(type: ExportGradleBuildFileForJavaLibraryProject) { ExportGradleBuildFileForJavaLibraryProject task ->
-        parent = task.project.projectDir
-        projectName = task.project.name
     }
 }
 

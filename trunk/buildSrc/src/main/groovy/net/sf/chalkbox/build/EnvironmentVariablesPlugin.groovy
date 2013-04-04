@@ -36,7 +36,7 @@ public class EnvironmentVariablesPlugin implements Plugin<Project> {
                 outputFactory.withStyle(Style.Info).println("${System.getenv('GRADLE_HOME')}")
             }
         }
-        project.task("printOutEnvironment") {Task task ->
+        project.task("printOutEnvironment") { Task task ->
             task.dependsOn("javaHome", "groovyHome", "gradleHome")
             group = GROUP
             description = "Prints out environment variables like JAVA_HOME."
