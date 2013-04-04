@@ -1,1 +1,1 @@
-include 'buildSrc','junit-4.10','chalkbox','example','buildfile-generator'
+include 'buildSrc','junit-4.10','chalkbox','example','buildfile-generator','tempura'

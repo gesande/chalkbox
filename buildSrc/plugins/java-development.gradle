@@ -11,13 +11,13 @@ apply plugin: "java"
 subprojects {
     apply plugin: JavaDevelopmentPlugin
 
-    task applySvnIgnore() { Task task ->
+    task applySvnIgnore { Task task ->
         group 'Development'
         description "Applies SVN ignore based on contents in ${svnIgnoreFile}."
         doLast {
             def out= ""
             new ByteArrayOutputStream().withStream { os ->
-                def result =project.exec {
+                def result =exec {
                     executable = 'svn'
                     args = [
                         'propset',
@@ -30,7 +30,7 @@ subprojects {
                 }
                 out = os.toString()
             }
-            services.get(StyledTextOutputFactory).create("java-development.svnIgnore").withStyle(Style.Info).println("Svn ignore applied as defined in ${svnIgnoreFile} to project ${task.project.name}.")
+            services.get(StyledTextOutputFactory).create("java-development.applySvnIgnore").withStyle(Style.Info).println("Svn ignore applied as defined in ${svnIgnoreFile} to project ${task.project.name}.")
         }
     }
 }
