@@ -1,5 +1,5 @@
 import net.sf.chalkbox.build.EnvironmentVariablesPlugin
-import net.sf.chalkbox.build.ExportAntBuildFileTask
+import net.sf.chalkbox.build.ExportAntBuildFilePlugin
 import net.sf.chalkbox.build.SvnPlugin
 
 import org.gradle.api.Task
@@ -16,12 +16,14 @@ apply plugin : EnvironmentVariablesPlugin
 apply from: "$buildPlugins/eclipseSettings.gradle"
 
 apply plugin : SvnPlugin
+apply plugin : ExportAntBuildFilePlugin
 
 task continousBuild(type: GradleBuild) { Task task ->
     group = 'Verification'
     description ='Continous build for the whole thing. Works also as a license to commit build target.'
     buildFile = 'build.gradle'
     tasks << 'clean'
+    tasks << 'applySvnIgnore'
     tasks << 'refreshBuildFileGenerator'
     tasks << 'exportAntBuildFile'
     tasks << 'chalkbox:continous'
@@ -48,19 +50,6 @@ task distributionPackage(type: GradleBuild, dependsOn: ['continousBuild']) { Tas
     doLast { println "Distribution package ready to be uploaded to the repository." }
 }
 
-task exportAntBuildFile(type: ExportAntBuildFileTask)  { ExportAntBuildFileTask task ->
-    group = 'Build'
-    description = 'Creates a ant build file for the project which contains the most important targets.'
-    parent = "buildSrc"
-    buildFilename= "chalkbox.xml"
-    defaultTarget= "continousBuild"
-    targets = [
-        "distributionPackage",
-        "eclipseSettings",
-        "exportAntBuildFile",
-        "refreshBuildFileGenerator"
-    ]
-}
 
 task buildBuildFileGenerator(type: GradleBuild) { GradleBuild task ->
     group = 'Build'
