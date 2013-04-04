@@ -6,6 +6,10 @@ import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
 
 public class ExportGradleBuildFileForNewJavaProject extends DefaultTask{
+
+    def String group ='Development'
+    def String description ="Creates a template build.gradle for new java project."
+
     def parent
     def projectName
 
