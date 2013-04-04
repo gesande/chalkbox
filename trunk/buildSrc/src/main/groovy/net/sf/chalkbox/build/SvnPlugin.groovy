@@ -53,7 +53,7 @@ public final class SvnPlugin implements Plugin<Project>{
                     svnversion = os.toString()
                 }
                 def outputFactory = services.get(StyledTextOutputFactory).create("SvnPlugin.svnStatus")
-                outputFactory.withStyle(Style.Info).println("${svnStatus}")
+                outputFactory.withStyle(Style.Info).println(svnStatus.isEmpty() ? "No changes" : "${svnStatus}")
                 outputFactory.withStyle(Style.Info).println("Revision: ${svnversion}")
             }
         }
