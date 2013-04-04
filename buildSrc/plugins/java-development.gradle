@@ -1,6 +1,5 @@
 import net.sf.chalkbox.build.JavaDevelopmentPlugin
 
-import org.gradle.api.Task
 import org.gradle.api.tasks.GradleBuild
 import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
@@ -8,32 +7,7 @@ import org.gradle.logging.StyledTextOutput.Style
 
 apply plugin: "java"
 
-subprojects {
-    apply plugin: JavaDevelopmentPlugin
-
-    task applySvnIgnore { Task task ->
-        group 'Development'
-        description "Applies SVN ignore based on contents in ${svnIgnoreFile}."
-        doLast {
-            def out= ""
-            new ByteArrayOutputStream().withStream { os ->
-                def result =exec {
-                    executable = 'svn'
-                    args = [
-                        'propset',
-                        'svn:ignore',
-                        '-F',
-                        "${svnIgnoreFile}",
-                        "${task.project.name}"
-                    ]
-                    standardOutput = os
-                }
-                out = os.toString()
-            }
-            services.get(StyledTextOutputFactory).create("java-development.applySvnIgnore").withStyle(Style.Info).println("Svn ignore applied as defined in ${svnIgnoreFile} to project ${task.project.name}.")
-        }
-    }
-}
+subprojects { apply plugin: JavaDevelopmentPlugin }
 
 task newJavaProject(type: GradleBuild ) { GradleBuild task ->
     group ='Development'
