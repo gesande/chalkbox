@@ -1,3 +1,4 @@
+import net.sf.chalkbox.build.ContinousBuildPlugin
 import net.sf.chalkbox.build.EnvironmentVariablesPlugin
 import net.sf.chalkbox.build.ExportAntBuildFilePlugin
 import net.sf.chalkbox.build.SvnPlugin
@@ -17,38 +18,7 @@ apply from: "$buildPlugins/eclipseSettings.gradle"
 
 apply plugin : SvnPlugin
 apply plugin : ExportAntBuildFilePlugin
-
-task continousBuild(type: GradleBuild) { Task task ->
-    group = 'Verification'
-    description ='Continous build for the whole thing. Works also as a license to commit build target.'
-    buildFile = 'build.gradle'
-    tasks << 'clean'
-    tasks << 'applySvnIgnore'
-    tasks << 'refreshBuildFileGenerator'
-    tasks << 'exportAntBuildFile'
-    tasks << 'chalkbox:continous'
-    tasks << 'chalkbox:dist'
-    tasks << 'example:dist'
-    tasks << 'aggregateTestReport'
-    tasks << 'aggregateJDependReport'
-    tasks << 'aggregateEmmaReport'
-    tasks << 'aggregateFindbugsReport'
-
-    doLast { println "Continous build passed, good work!" }
-}
-
-task distributionPackage(type: GradleBuild, dependsOn: ['continousBuild']) { Task task ->
-    group = 'Distribution'
-    description = 'Distribution package for the whole thing including continous build.'
-    buildFile = 'build.gradle'
-
-    tasks << 'chalkbox:release'
-    tasks << 'example:release'
-    tasks << 'archiveAggregateReports'
-    tasks << 'makeDistributionPackage'
-
-    doLast { println "Distribution package ready to be uploaded to the repository." }
-}
+apply plugin : ContinousBuildPlugin
 
 
 task buildBuildFileGenerator(type: GradleBuild) { GradleBuild task ->
