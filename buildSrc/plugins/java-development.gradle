@@ -1,6 +1,5 @@
 import net.sf.chalkbox.build.JavaDevelopmentPlugin
 
-import org.gradle.api.Task
 import org.gradle.api.tasks.GradleBuild
 import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
@@ -11,9 +10,7 @@ apply plugin: "java"
 task newJavaProject(type: GradleBuild ) { GradleBuild task ->
     group ='Development'
     description ="Creates a new Java project putting it already to SVN and applying some SVN ignore magic from predefined file which seem to be ${svnIgnoreFile}. Needs -PnewJavaProject argument."
-
     def javaProject =  task.project.properties.newJavaProject
-    println "java project =${javaProject}"
     String createJavaDirs = "${javaProject}:createJavaDirs"
     String eclipseSettingsFor = "${javaProject}:eclipseSettingsFor"
     String buildGradle = "${javaProject}:buildGradleForJavaProject"
@@ -26,7 +23,7 @@ task newJavaProject(type: GradleBuild ) { GradleBuild task ->
     task.tasks << buildGradle
 
     doLast {
-        printOutInfo("java-development.newJavaProject", "New Java project can now be found from ${task.project.buildDir}/${javaProject}")
+        services.get(StyledTextOutputFactory).create("java-development.newJavaProject").withStyle(Style.Info).println("New Java project can now be found from ${task.project.buildDir}/${javaProject}")
     }
 }
 
@@ -34,7 +31,6 @@ task newJavaLibProject(type: GradleBuild) { GradleBuild task ->
     group ='Development'
     description ="Creates a new Java library project putting it already to SVN and applying some SVN ignore magic from predefined file which seem to be ${svnIgnoreFile}. Needs -PnewJavaProject argument."
     def javaProject =  task.project.properties.newJavaProject
-    println "java lib project =${javaProject}"
     String createJavaDirs = "${javaProject}:createJavaDirs"
     String eclipseSettingsFor = "${javaProject}:eclipseSettingsFor"
     String svnAdd = "${javaProject}:addProjectToSvn"
@@ -50,12 +46,10 @@ task newJavaLibProject(type: GradleBuild) { GradleBuild task ->
     task.tasks << buildGradle
 
     doLast {
-        printOutInfo("java-development.newJavaProject", "New Java project can now be found from ${task.project.buildDir}/${javaProject}")
+        services.get(StyledTextOutputFactory).create("java-development.newJavaLibProject").withStyle(Style.Info).println("New Java project can now be found from ${task.project.buildDir}/${javaProject}")
     }
 }
 
 subprojects { apply plugin: JavaDevelopmentPlugin }
 
-void printOutInfo(String taskName, String msg){
-    services.get(StyledTextOutputFactory).create(taskName).withStyle(Style.Info).println(msg)
-}
+

@@ -6,7 +6,6 @@ import org.gradle.api.Task
 import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
 
-
 public class JavaDevelopmentPlugin implements Plugin<Project> {
 
     @Override
@@ -14,7 +13,7 @@ public class JavaDevelopmentPlugin implements Plugin<Project> {
         project.task("createLibDirs") { Task task ->
             group 'Development'
             description 'Creates lib and lib-sources -directories under the given project.'
-            doLast {
+            task.doLast {
                 def libDir = new File(task.project.projectDir, 'lib')
                 libDir.mkdirs()
                 def libSourcesDir = new File(task.project.projectDir, 'lib-sources')
@@ -24,7 +23,7 @@ public class JavaDevelopmentPlugin implements Plugin<Project> {
         project.task("createJavaDirs") { Task task ->
             group 'Development'
             description 'Create directory structures for a Java project.'
-            doLast {
+            task.doLast {
                 project.sourceSets*.java.srcDirs*.each { it.mkdirs() }
                 project.sourceSets*.resources.srcDirs*.each { it.mkdirs() }
             }
@@ -32,7 +31,7 @@ public class JavaDevelopmentPlugin implements Plugin<Project> {
         project.task("addProjectToSvn") { Task task ->
             group 'Development'
             description 'Add project to SVN.'
-            doLast {
+            task.doLast {
                 def out= ""
                 new ByteArrayOutputStream().withStream { os ->
                     def result = project.parent.exec {
@@ -49,10 +48,10 @@ public class JavaDevelopmentPlugin implements Plugin<Project> {
             }
         }
 
-        project.task("generateSvnIgnoreFile") {
+        project.task("generateSvnIgnoreFile") { Task task ->
             group 'Development'
             description "Generates SVN ignore file."
-            doLast {
+            task.doLast {
                 def StringBuilder sb = new StringBuilder()
                 sb.append("build\n")
                 sb.append("target\n")
@@ -71,7 +70,7 @@ public class JavaDevelopmentPlugin implements Plugin<Project> {
             task.dependsOn("generateSvnIgnoreFile")
             group 'Development'
             description "Applies SVN ignore based on contents in project's svn-ignore file."
-            doLast {
+            task.doLast {
                 def out= ""
                 new ByteArrayOutputStream().withStream { os ->
                     def result =project.exec {
@@ -94,7 +93,7 @@ public class JavaDevelopmentPlugin implements Plugin<Project> {
         project.task("applySvnIgnore") { Task task ->
             group 'Development'
             description "Applies SVN ignore based on contents in ${project.properties.svnIgnoreFile}."
-            doLast {
+            task.doLast {
                 def out= ""
                 new ByteArrayOutputStream().withStream { os ->
                     def result = project.exec {
