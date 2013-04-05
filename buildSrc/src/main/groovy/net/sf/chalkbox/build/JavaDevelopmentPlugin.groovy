@@ -81,7 +81,7 @@ public class JavaDevelopmentPlugin implements Plugin<Project> {
                             'svn:ignore',
                             '-F',
                             "${task.project.projectDir}/svn-ignore",
-                            "${task.project.name}"
+                            "."
                         ]
                         standardOutput = os
                     }
@@ -104,7 +104,7 @@ public class JavaDevelopmentPlugin implements Plugin<Project> {
                             'svn:ignore',
                             '-F',
                             "${project.properties.svnIgnoreFile}",
-                            "${task.project.name}"
+                            "."
                         ]
                         standardOutput = os
                     }
