@@ -23,7 +23,7 @@ public class ContinousBuildPlugin implements Plugin<Project>{
             tasks << 'example:dist'
             tasks << 'aggregateTestReport'
             tasks << 'aggregateJDependReport'
-            tasks << 'aggregateEmmaReport'
+            tasks << 'aggregateCoverageReport'
             tasks << 'aggregateFindbugsReport'
             doLast { println "Continous build passed, good work!" }
         }
