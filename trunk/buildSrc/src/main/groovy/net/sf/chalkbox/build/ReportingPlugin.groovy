@@ -4,6 +4,8 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.FileTree
+import org.gradle.api.tasks.bundling.Compression
+import org.gradle.api.tasks.bundling.Tar
 import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
 
@@ -181,6 +183,21 @@ public class ReportingPlugin implements Plugin<Project>{
                 }
                 def outputFactory = services.get(StyledTextOutputFactory).create("reporting.aggregateFindBugsReport")
                 outputFactory.withStyle(Style.Info).println("Findbugs report can be found from file://${targetDir}/index.html)")
+            }
+        }
+        project.task("archiveAggregateReports", type: Tar)  { Tar task ->
+            group = 'Archive'
+            description = 'Archive aggregate reports including junit tests/pmd/findbugs/jdepend'
+            from project.properties.reportDir
+            // Set destination directory.
+            task.destinationDir = project.properties.cacheDir
+            // Set filename properties.
+            task.baseName = "report-artifacts-"+ project.properties.artifactVersion
+            extension = 'tar.gz'
+            compression = Compression.GZIP
+            doLast {
+                def String tarFile = "${project.properties.cacheDir}/report-artifacts-${project.properties.artifactVersion}.tar.gz"
+                printOutInfo("artifact.archiveAggregateReports", "Report artifact archive can be found from file://$tarFile")
             }
         }
     }
