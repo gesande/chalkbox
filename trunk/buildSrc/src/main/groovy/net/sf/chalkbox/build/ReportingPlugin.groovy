@@ -18,9 +18,11 @@ public class ReportingPlugin implements Plugin<Project>{
         project.configurations { antClasspath }
         project.dependencies { antClasspath 'org.apache.ant:ant-junit:1.8.2' }
 
-        project.task ("reportingOptions") << {
-            println project.reportingPlugin.reportDir
-            println project.reportingPlugin.toolsDir
+        project.task ("reportingOptions") { Task task ->
+            doLast {
+                println "${project.reportingPlugin.reportDir}"
+                println "${project.reportingPlugin.toolsDir}"
+            }
         }
         project.task ("aggregateTestReport") {
             group = 'Reporting'
@@ -188,16 +190,19 @@ public class ReportingPlugin implements Plugin<Project>{
         project.task("archiveAggregateReports", type: Tar)  { Tar task ->
             group = 'Archive'
             description = 'Archive aggregate reports including junit tests/pmd/findbugs/jdepend'
-            from project.properties.reportDir
+            println "from : ${project.properties.reportDir}"
+            from ("${project.properties.reportDir}")
             // Set destination directory.
-            task.destinationDir = project.properties.cacheDir
+            println "to : ${project.properties.cacheDir}"
+            task.destinationDir = project.file("${project.properties.cacheDir}")
             // Set filename properties.
-            task.baseName = "report-artifacts-"+ project.properties.artifactVersion
+            task.baseName = "report-artifacts-${project.properties.artifactVersion}"
             extension = 'tar.gz'
             compression = Compression.GZIP
             doLast {
                 def String tarFile = "${project.properties.cacheDir}/report-artifacts-${project.properties.artifactVersion}.tar.gz"
-                printOutInfo("artifact.archiveAggregateReports", "Report artifact archive can be found from file://$tarFile")
+                def outputFactory = services.get(StyledTextOutputFactory).create("reporting.archiveAggregateReports")
+                outputFactory.withStyle(Style.Info).println("Report artifact archive can be found from file://$tarFile")
             }
         }
     }
