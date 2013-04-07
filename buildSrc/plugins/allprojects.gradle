@@ -11,12 +11,8 @@ import org.gradle.api.tasks.GradleBuild
 apply from: "$buildPlugins/java-development.gradle"
 apply from: "$buildPlugins/repositories.gradle"
 
-apply plugin : ReportingPlugin
 
-reportingPlugin {
-    reportDir = "$reportDir"
-    toolsDir = "$toolsDir"
-}
+apply from: "$buildPlugins/reporting.gradle"
 
 apply from: "$buildPlugins/distribution-package.gradle"
 

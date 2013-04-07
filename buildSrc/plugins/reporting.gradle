@@ -1,8 +1,13 @@
 import net.sf.chalkbox.build.ReportingPlugin
 
+import org.gradle.api.tasks.bundling.Compression
+import org.gradle.api.tasks.bundling.Tar
+import org.gradle.logging.StyledTextOutputFactory
+import org.gradle.logging.StyledTextOutput.Style
+
+
+
 apply plugin : ReportingPlugin
 
-reportingPlugin {
-    reportDir = "$reportDir"
-    toolsDir = "$toolsDir"
-}
+reportingPlugin.reportDir = "$reportDir"
+reportingPlugin.toolsDir = "$toolsDir"
