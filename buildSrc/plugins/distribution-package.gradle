@@ -1,4 +1,0 @@
-import net.sf.chalkbox.build.JavaDistributionPlugin
-
-
-apply  plugin : JavaDistributionPlugin
