@@ -1,7 +1,7 @@
 
 project(':example') {
     apply from:"$emmaPlugin"
-    apply from:"$distributionPlugin"
+    apply plugin : net.sf.chalkbox.build.JavaProjectDistribution
     dependencies { compile project(':chalkbox') }
 }
 

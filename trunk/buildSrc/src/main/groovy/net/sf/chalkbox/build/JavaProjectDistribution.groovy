@@ -13,23 +13,23 @@ class JavaProjectDistribution implements Plugin<Project>{
         project.task('dist', type: Zip) { Zip task ->
             group = 'Distribution'
             description = "Makes the project specific distribution archive."
-            task.dependsOn 'jar'
-            from jar
-            from configurations.runtime
+            task.dependsOn("jar")
+            task.from project.jar
+            task.from project.configurations.runtime
             task.exclude('junit-4.10-1.0.0.jar')
         }
 
         project.artifacts {
-            archives dist
-            archives sourcesJar
+            archives project.dist
+            archives project.sourcesJar
         }
 
         project.task('testCodeDist', type: Zip) { Zip task ->
             group = 'Distribution'
             description = "Makes the project specific test code distribution archive."
             task.dependsOn 'jar'
-            from testSourcesJar
-            from configurations.testRuntime
+            task.from project.testSourcesJar
+            task.from project.configurations.testRuntime
             task.exclude('junit-4.10-1.0.0.jar')
         }
 
