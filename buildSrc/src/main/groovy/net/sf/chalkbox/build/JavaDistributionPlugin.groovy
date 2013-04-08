@@ -9,7 +9,7 @@ import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
 
 
-public class DistributionPlugin implements Plugin<Project>{
+public class JavaDistributionPlugin implements Plugin<Project>{
 
     @Override
     public void apply(final Project project) {

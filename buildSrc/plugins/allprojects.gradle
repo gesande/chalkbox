@@ -1,62 +1,27 @@
 
-import net.sf.chalkbox.build.ContinousBuildPlugin
-import net.sf.chalkbox.build.DistributionPlugin
+import net.sf.chalkbox.build.ChalkBoxBuildPlugin
+import net.sf.chalkbox.build.EclipseSettingsPlugin
 import net.sf.chalkbox.build.EnvironmentVariablesPlugin
 import net.sf.chalkbox.build.ExportAntBuildFilePlugin
+import net.sf.chalkbox.build.JavaDistributionPlugin
+import net.sf.chalkbox.build.MavenCentral
 import net.sf.chalkbox.build.NewJavaProjectPlugin
 import net.sf.chalkbox.build.ReportingPlugin
 import net.sf.chalkbox.build.SvnPlugin
 
-import org.gradle.api.Task
-import org.gradle.api.tasks.GradleBuild
 
-
-allprojects {
-    repositories { mavenCentral()  //mavenRepo url: "file://${repositoryDir}/"
-    }
-}
-
+apply plugin: MavenCentral
 apply plugin: NewJavaProjectPlugin
 
 apply plugin : ReportingPlugin
-
 reportingSettings {
     reportDirectory = "${reportDir}"
     toolsDirectory = "${toolsDir}"
 }
-
-apply plugin : DistributionPlugin
+apply plugin : JavaDistributionPlugin
 apply plugin : EnvironmentVariablesPlugin
-
-apply from: "$buildPlugins/eclipseSettings.gradle"
-
+apply plugin : EclipseSettingsPlugin
 apply plugin : SvnPlugin
 apply plugin : ExportAntBuildFilePlugin
-apply plugin : ContinousBuildPlugin
 
-task buildBuildFileGenerator(type: GradleBuild) { GradleBuild task ->
-    group = 'Build'
-    description = 'Runs continous and release to buildfile-generator module.'
-
-    tasks << 'buildfile-generator:continous'
-    tasks << 'buildfile-generator:release'
-}
-
-task refreshBuildFileGenerator(dependsOn: ['buildBuildFileGenerator']) { Task task ->
-    group = 'Build'
-    description = 'Builds jar and sources-jar for buildfile-generator and copies the files to buildSrc lib/lib-sources directory.'
-    doLast {
-        def artifact = "buildfile-generator-1.0.0"
-        def libs= file('buildfile-generator/build/libs')
-        def lib = file('buildSrc/lib')
-        def libSources = file('buildSrc/lib-sources')
-        copy {
-            from "${libs}/${artifact}.jar"
-            into lib
-        }
-        copy {
-            from "${libs}/${artifact}-sources.jar"
-            into libSources
-        }
-    }
-}
+apply plugin : ChalkBoxBuildPlugin

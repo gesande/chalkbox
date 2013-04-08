@@ -6,6 +6,7 @@ import org.gradle.api.tasks.GradleBuild
 import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
 
+
 class NewJavaProjectPlugin implements Plugin<Project> {
 
     @Override
