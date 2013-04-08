@@ -18,12 +18,12 @@ public class ReportingPlugin implements Plugin<Project>{
         project.configurations { antClasspath }
         project.dependencies { antClasspath 'org.apache.ant:ant-junit:1.8.2' }
 
-        project.task ("reportingSettings") {
+        project.task ("reportingOptions") {
             group = 'Reporting'
-            description = "Prints out reporting plugin settings"
+            description = "Prints out reporting plugin options"
             doLast {
-                println "reportDir = ${project.reportingSettings.reportDir}"
-                println "toolsDir = ${project.reportingSettings.toolsDir}"
+                println "reportDir = ${project.reportingSettings.reportDirectory}"
+                println "toolsDir = ${project.reportingSettings.toolsDirectory}"
             }
         }
         project.task ("aggregateTestReport") {
@@ -35,7 +35,7 @@ public class ReportingPlugin implements Plugin<Project>{
                 project.configurations.antClasspath.each { File f ->
                     antClassLoader.addURL(f.toURI().toURL())
                 }
-                def targetDir = new File("${project.reportingSettings.reportDir}", 'junit')
+                def targetDir = new File("${project.reportingSettings.reportDirectory}", 'junit')
                 targetDir.mkdirs()
                 def resultsDir=targetDir.getPath()
                 println 'Creating test report...'
@@ -51,7 +51,7 @@ public class ReportingPlugin implements Plugin<Project>{
                 }
 
                 def outputFactory = services.get(StyledTextOutputFactory).create("reporting.aggregateTestReport")
-                outputFactory.withStyle(Style.Info).println("Aggregate test report can be found from file://${project.reportingSettings.reportDir}/junit/index.html")
+                outputFactory.withStyle(Style.Info).println("Aggregate test report can be found from file://${targetDir}/index.html")
             }
         }
 
@@ -59,7 +59,7 @@ public class ReportingPlugin implements Plugin<Project>{
             group = 'Reporting'
             description = "Makes aggregate coverage report with emma."
             doLast {
-                def targetDir = new File("${project.reportingSettings.reportDir}", 'emma')
+                def targetDir = new File("${project.reportingSettings.reportDirectory}", 'emma')
                 targetDir.deleteDir()
                 targetDir.mkdirs()
                 def List<String> inArgs= new ArrayList<String>()
@@ -84,7 +84,7 @@ public class ReportingPlugin implements Plugin<Project>{
 
                 println 'Creating coverage report...'
                 def exit = project.javaexec {
-                    classpath "${project.reportingSettings.toolsDir}/emma-2.1.5320-lib/emma.jar"
+                    classpath "${project.reportingSettings.toolsDirectory}/emma-2.1.5320-lib/emma.jar"
                     main = 'emma'
                     args = arguments
                 }
@@ -96,14 +96,14 @@ public class ReportingPlugin implements Plugin<Project>{
             group = 'Reporting'
             description = "Makes aggregate jdepend report with tattletale."
             doLast {
-                def targetDir = new File("$project.reportingSettings.reportDir", 'jdepend')
+                def targetDir = new File("$project.reportingSettings.reportDirectory", 'jdepend')
                 targetDir.deleteDir()
                 targetDir.mkdirs()
-                def jarsDir= new File("${project.reportingSettings.reportDir}/analyzed-jars")
+                def jarsDir= new File("${project.reportingSettings.reportDirectory}/analyzed-jars")
                 jarsDir.deleteDir()
                 jarsDir.mkdirs()
                 def FileTree jars = project.fileTree("${project.projectDir}").include('**/build/libs/*.jar')
-                def FileTree libs = project.fileTree("${project.projectDir}").exclude("${project.reportingSettings.toolsDir}").include('**/lib/*.jar')
+                def FileTree libs = project.fileTree("${project.projectDir}").exclude("${project.reportingSettings.toolsDirectory}").include('**/lib/*.jar')
                 project.copy {
                     from jars.getFiles() + libs.getFiles()
                     into "$jarsDir"
@@ -115,7 +115,7 @@ public class ReportingPlugin implements Plugin<Project>{
                         args =[
                             '-Xmx1024m',
                             '-jar',
-                            "$project.reportingSettings.toolsDir/tattletale-1.1.2.Final/tattletale.jar",
+                            "$project.reportingSettings.toolsDirectory/tattletale-1.1.2.Final/tattletale.jar",
                             "${jarsDir}",
                             "${targetDir}"
                         ]
@@ -130,7 +130,7 @@ public class ReportingPlugin implements Plugin<Project>{
             group ='Reporting'
             description = 'Makes aggregate findbugs report.'
             doLast {
-                def targetDir = new File("${project.reportingSettings.reportDir}", 'findbugs')
+                def targetDir = new File("${project.reportingSettings.reportDirectory}", 'findbugs')
                 targetDir.deleteDir()
                 targetDir.mkdirs()
                 def String jreHome = "${System.getenv('JAVA_HOME')}/jre"
@@ -156,9 +156,9 @@ public class ReportingPlugin implements Plugin<Project>{
                 arguments.add('-auxclasspath')
 
                 def StringBuilder auxClasspath = new StringBuilder()
-                def FileTree libs = project.fileTree("${project.projectDir}").exclude("${project.reportingSettings.toolsDir}").include('**/lib/*.jar')
+                def FileTree libs = project.fileTree("${project.projectDir}").exclude("${project.reportingSettings.toolsDirectory}").include('**/lib/*.jar')
                 def FileTree jreLibs = project.fileTree("${jreHome}/lib/").include('*.jar')
-                def FileTree extLibs = project.fileTree("${project.reportingSettings.toolsDir}/ext-libs-for-findbugs/").include('*.jar')
+                def FileTree extLibs = project.fileTree("${project.reportingSettings.toolsDirectory}/ext-libs-for-findbugs/").include('*.jar')
                 for(File libJar : libs){
                     auxClasspath.append(libJar.getPath())
                     auxClasspath.append(File.pathSeparator)
@@ -180,7 +180,7 @@ public class ReportingPlugin implements Plugin<Project>{
 
                 new ByteArrayOutputStream().withStream { os ->
                     def result = project.exec {
-                        executable = "${project.reportingSettings.toolsDir}/findbugs-2.0.2/bin/findbugs"
+                        executable = "${project.reportingSettings.toolsDirectory}/findbugs-2.0.2/bin/findbugs"
                         args = arguments
                         standardOutput = os
                     }
@@ -192,7 +192,7 @@ public class ReportingPlugin implements Plugin<Project>{
         project.task("archiveAggregateReports", type: Tar)  { Tar task ->
             group = 'Archive'
             description = 'Archive aggregate reports including junit tests/pmd/findbugs/jdepend'
-            from ("${project.properties.reportDir}")
+            from ("${project.properties.reportDirectory}")
             // Set destination directory.
             task.destinationDir = project.file("${project.properties.cacheDir}")
             // Set filename properties.
@@ -209,7 +209,7 @@ public class ReportingPlugin implements Plugin<Project>{
 }
 
 class ReportingSettingsExtension {
-    String toolsDir
-    String reportDir
+    String toolsDirectory
+    String reportDirectory
 }
 
