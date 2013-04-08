@@ -1,3 +1,0 @@
-import net.sf.chalkbox.build.JavaDevelopmentPlugin
-
-apply plugin: JavaDevelopmentPlugin
