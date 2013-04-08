@@ -33,7 +33,7 @@ eclipse {
                 String gradleHome = gradle.getGradleHomeDir().absolutePath.replace(File.separator, '/')
                 String gradleSrc = "${gradleHome}/src"
                 def entrySourcePath = new FileReferenceFactory().fromPath(gradleSrc)
-                def outputFactory = services.get(StyledTextOutputFactory).create("gradlePlugins.eclipse.classpath")
+                def outputFactory = services.get(StyledTextOutputFactory).create("gradlePlugins.eclipseClasspath")
                 cp.entries.each {ClasspathEntry entry ->
                     if ((entry in AbstractLibrary) && (entry.library.file.name.startsWith('gradle-'))) {
                         entry.sourcePath = entrySourcePath
