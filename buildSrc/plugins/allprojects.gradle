@@ -12,7 +12,9 @@ apply from: "$buildPlugins/java-development.gradle"
 apply from: "$buildPlugins/repositories.gradle"
 
 
-apply from: "$buildPlugins/reporting.gradle"
+apply plugin : ReportingPlugin
+reportingSettings.reportDir = "${reportDir}"
+reportingSettings.toolsDir = "${toolsDir}"
 
 apply from: "$buildPlugins/distribution-package.gradle"
 
