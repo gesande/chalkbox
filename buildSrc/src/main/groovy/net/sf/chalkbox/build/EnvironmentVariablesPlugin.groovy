@@ -6,13 +6,14 @@ import org.gradle.api.Task
 import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
 
+
 public class EnvironmentVariablesPlugin implements Plugin<Project> {
 
     private static final String GROUP = "Environment variables"
 
     @Override
     public void apply(final Project project) {
-        project.task("javaHome") { Task task ->
+        project.task("javaHome") {
             group = GROUP
             description = "Prints out JAVA_HOME."
             doLast {
@@ -20,7 +21,7 @@ public class EnvironmentVariablesPlugin implements Plugin<Project> {
                 outputFactory.withStyle(Style.Info).println("${System.getenv('JAVA_HOME')}")
             }
         }
-        project.task("groovyHome") { Task task ->
+        project.task("groovyHome") {
             group = GROUP
             description = "Prints out GROOVY_HOME."
             doLast {
@@ -28,7 +29,7 @@ public class EnvironmentVariablesPlugin implements Plugin<Project> {
                 outputFactory.withStyle(Style.Info).println("${System.getenv('GROOVY_HOME')}")
             }
         }
-        project.task("gradleHome") { Task task ->
+        project.task("gradleHome") {
             group = GROUP
             description = "Prints out GRADLE_HOME."
             doLast {

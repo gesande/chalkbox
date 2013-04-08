@@ -1,6 +1,9 @@
+
 import net.sf.chalkbox.build.ContinousBuildPlugin
+import net.sf.chalkbox.build.DistributionPlugin
 import net.sf.chalkbox.build.EnvironmentVariablesPlugin
 import net.sf.chalkbox.build.ExportAntBuildFilePlugin
+import net.sf.chalkbox.build.NewJavaProjectPlugin
 import net.sf.chalkbox.build.ReportingPlugin
 import net.sf.chalkbox.build.SvnPlugin
 
@@ -8,16 +11,21 @@ import org.gradle.api.Task
 import org.gradle.api.tasks.GradleBuild
 
 
-apply from: "$buildPlugins/java-development.gradle"
-apply from: "$buildPlugins/repositories.gradle"
+allprojects {
+    repositories { mavenCentral()  //mavenRepo url: "file://${repositoryDir}/"
+    }
+}
 
+apply plugin: NewJavaProjectPlugin
 
 apply plugin : ReportingPlugin
-reportingSettings.reportDir = "${reportDir}"
-reportingSettings.toolsDir = "${toolsDir}"
 
-apply from: "$buildPlugins/distribution-package.gradle"
+reportingSettings {
+    reportDirectory = "${reportDir}"
+    toolsDirectory = "${toolsDir}"
+}
 
+apply plugin : DistributionPlugin
 apply plugin : EnvironmentVariablesPlugin
 
 apply from: "$buildPlugins/eclipseSettings.gradle"
@@ -25,7 +33,6 @@ apply from: "$buildPlugins/eclipseSettings.gradle"
 apply plugin : SvnPlugin
 apply plugin : ExportAntBuildFilePlugin
 apply plugin : ContinousBuildPlugin
-
 
 task buildBuildFileGenerator(type: GradleBuild) { GradleBuild task ->
     group = 'Build'

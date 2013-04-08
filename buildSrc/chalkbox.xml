@@ -33,4 +33,9 @@
 			<arg value="refreshBuildFileGenerator" />
 		</exec>
 	</target>
+	<target name="tasks">
+		<exec executable="${gradle.executable}" dir=".">
+			<arg value="tasks" />
+		</exec>
+	</target>
 </project>

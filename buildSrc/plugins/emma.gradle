@@ -3,6 +3,14 @@ import static org.gradle.logging.StyledTextOutput.Style
 import org.gradle.api.Project
 import org.gradle.logging.StyledTextOutputFactory
 
+/* Got this originally from https://github.com/breskeby/gradleplugins/blob/master/emmaPlugin/emma.gradle
+ * 
+ * Changes:
+ * - added stylish printing 
+ * - added also checking the coverage 
+ * 
+ */
+
 
 apply plugin:'java'
 
