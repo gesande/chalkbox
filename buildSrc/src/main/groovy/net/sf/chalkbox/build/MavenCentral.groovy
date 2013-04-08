@@ -7,7 +7,6 @@ class MavenCentral implements Plugin<Project>{
 
     @Override
     public void apply(final Project project) {
-        project.allprojects { repositories { mavenCentral()
-            } }
+        project.allprojects { repositories { mavenCentral() } }
     }
 }
