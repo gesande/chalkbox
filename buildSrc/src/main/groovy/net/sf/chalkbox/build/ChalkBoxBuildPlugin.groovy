@@ -54,7 +54,7 @@ public class ChalkBoxBuildPlugin implements Plugin<Project>{
             group = 'Chalkbox build'
             description = 'Builds jar and sources-jar for buildfile-generator and copies the files to buildSrc lib/lib-sources directory.'
             doLast {
-                def artifact = "buildfile-generator-1.0.0"
+                def artifact = "buildfile-generator-1.1.0"
                 def libs= project.file('buildfile-generator/build/libs')
                 def lib = project.file('buildSrc/lib')
                 def libSources = project.file('buildSrc/lib-sources')
