@@ -1,10 +1,10 @@
 import net.sf.chalkbox.build.EclipseClasspathPlugin
 import net.sf.chalkbox.build.FindbugsWithHtmlReports
 import net.sf.chalkbox.build.ForkEclipseJdtPlugin
+import net.sf.chalkbox.build.ForkPmdSettings
 import net.sf.chalkbox.build.JavaProjectArtifactPlugin
 import net.sf.chalkbox.build.ProjectVersion
 
-import org.gradle.api.plugins.quality.Pmd
 import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
 
@@ -13,21 +13,7 @@ import org.gradle.logging.StyledTextOutput.Style
 apply plugin : JavaProjectArtifactPlugin
 apply plugin : FindbugsWithHtmlReports
 
-apply plugin: 'pmd'
-
-project.tasks.withType(Pmd) {
-    doFirst { task ->
-        copy {
-            from project.file("${buildTemplates}/for/pmd/.pmd")
-            into task.project.projectDir
-        }
-        println "Pmd template file copied for project $task.project.name"
-    }
-}
-
-project.pmd.ruleSetFiles = files(".pmd")
-project.pmd.ignoreFailures = 'false'
-
+apply plugin : ForkPmdSettings
 
 apply plugin: "jdepend"
 
