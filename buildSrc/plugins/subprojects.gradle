@@ -1,27 +1,17 @@
 import net.sf.chalkbox.build.EclipseClasspathPlugin
+import net.sf.chalkbox.build.FindbugsWithHtmlReports
 import net.sf.chalkbox.build.ForkEclipseJdtPlugin
 import net.sf.chalkbox.build.JavaProjectArtifactPlugin
 import net.sf.chalkbox.build.ProjectVersion
 
-import org.gradle.api.plugins.quality.FindBugs
 import org.gradle.api.plugins.quality.Pmd
 import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
 
 
 
-
 apply plugin : JavaProjectArtifactPlugin
-
-apply plugin: 'findbugs'
-
-project.tasks.withType(FindBugs){ ignoreFailures = false }
-
-[findbugsMain, findbugsTest]*.reports {
-    xml.enabled false
-    html.enabled true
-}
-
+apply plugin : FindbugsWithHtmlReports
 
 apply plugin: 'pmd'
 
