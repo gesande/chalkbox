@@ -1,5 +1,7 @@
 package net.sf.chalkbox.build
 
+import net.sf.mygradlebuild.tasks.ExportAntBuildFileTask
+
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

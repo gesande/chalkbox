@@ -1,4 +1,4 @@
-package net.sf.chalkbox.build
+package net.sf.mygradlebuild.tasks
 
 import org.gradle.api.tasks.Exec;
 
