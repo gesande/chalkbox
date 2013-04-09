@@ -1,4 +1,4 @@
-package net.sf.chalkbox.build;
+package net.sf.mygradlebuild;
 
 import java.io.BufferedWriter;
 import java.io.File;

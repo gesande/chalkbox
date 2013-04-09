@@ -1,6 +1,6 @@
 package net.sf.mygradlebuild.tasks
 
-import net.sf.chalkbox.build.GradleBuildFileGenerator;
+import net.sf.mygradlebuild.GradleBuildFileGenerator
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction

@@ -1,4 +1,4 @@
-package net.sf.chalkbox.build;
+package net.sf.mygradlebuild;
 
 import java.io.File;
 import java.io.IOException;

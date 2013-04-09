@@ -1,10 +1,12 @@
-package net.sf.chalkbox.build;
+package net.sf.mygradlebuild;
 
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import net.sf.mygradlebuild.AntBuildFileGeneratorForGradle;
 
 import org.junit.Test;
 
