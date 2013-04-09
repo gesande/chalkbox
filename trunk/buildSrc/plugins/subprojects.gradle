@@ -1,40 +1,21 @@
 import net.sf.chalkbox.build.EclipseClasspathPlugin
 import net.sf.chalkbox.build.ForkEclipseJdtPlugin
+import net.sf.chalkbox.build.JavaProjectArtifactPlugin
 import net.sf.chalkbox.build.ProjectVersion
 
 import org.gradle.api.plugins.quality.FindBugs
 import org.gradle.api.plugins.quality.Pmd
-import org.gradle.api.tasks.bundling.Jar
 import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
 
 
-apply plugin: "java"
 
-task sourcesJar(type: Jar, dependsOn:classes) {
-    group = 'Distribution'
-    description = "Makes the project specific sourceJar."
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
 
-task testSourcesJar(type: Jar, dependsOn:classes) {
-    group = 'Distribution'
-    description = "Makes the project specific testSourceJar."
-    classifier = 'tests'
-    from sourceSets.test.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    group = 'Distribution'
-    description = "Makes the project specific javadoc jar."
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
+apply plugin : JavaProjectArtifactPlugin
 
 apply plugin: 'findbugs'
 
-tasks.withType(FindBugs){ ignoreFailures = false }
+project.tasks.withType(FindBugs){ ignoreFailures = false }
 
 [findbugsMain, findbugsTest]*.reports {
     xml.enabled false
@@ -44,18 +25,18 @@ tasks.withType(FindBugs){ ignoreFailures = false }
 
 apply plugin: 'pmd'
 
-tasks.withType(Pmd) {
+project.tasks.withType(Pmd) {
     doFirst { task ->
         copy {
-            from file("${buildTemplates}/for/pmd/.pmd")
+            from project.file("${buildTemplates}/for/pmd/.pmd")
             into task.project.projectDir
         }
         println "Pmd template file copied for project $task.project.name"
     }
 }
 
-pmd.ruleSetFiles = files(".pmd")
-pmd.ignoreFailures = 'false'
+project.pmd.ruleSetFiles = files(".pmd")
+project.pmd.ignoreFailures = 'false'
 
 
 apply plugin: "jdepend"
@@ -65,8 +46,8 @@ apply plugin: "jdepend"
     text.enabled false
 }
 
-jdependMain.doLast {
-    File file = new File(jdepend.reportsDir, "main.xml");
+project.jdependMain.doLast {
+    File file = new File(project.jdepend.reportsDir, "main.xml");
     assert file.exists() && file.isFile(), "File '$file' must exist"
     def numberOfCycles = new XmlSlurper().parse(file).Cycles.Package.size()
     def outputFactory = services.get(StyledTextOutputFactory).create("jdependMain.doLast")
@@ -79,8 +60,8 @@ jdependMain.doLast {
     }
 }
 
-jdependTest.doLast {
-    File file = new File(jdepend.reportsDir, "test.xml");
+project.jdependTest.doLast {
+    File file = new File(project.jdepend.reportsDir, "test.xml");
     assert file.exists() && file.isFile(), "File '$file' must exist"
     def numberOfCycles = new XmlSlurper().parse(file).Cycles.Package.size()
     def outputFactory = services.get(StyledTextOutputFactory).create("jdependTest.doLast")
@@ -92,8 +73,6 @@ jdependTest.doLast {
         outputFactory.withStyle(Style.Info).println("No cycles detected for project '$project.name' . Good work!")
     }
 }
-
-
 
 task testCodeAnalysis(dependsOn: [
     findbugsTest,
