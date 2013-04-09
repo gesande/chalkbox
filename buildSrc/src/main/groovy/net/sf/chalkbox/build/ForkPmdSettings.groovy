@@ -8,7 +8,8 @@ class ForkPmdSettings implements Plugin<Project>{
 
     @Override
     public void apply(final Project project) {
-        project.getPlugins().apply("pmd");
+        project.plugins.apply("pmd");
+
         project.tasks.withType(Pmd) {
             doFirst {
                 project.copy {

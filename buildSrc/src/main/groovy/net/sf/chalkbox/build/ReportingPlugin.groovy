@@ -13,6 +13,7 @@ public class ReportingPlugin implements Plugin<Project>{
 
     @Override
     public void apply(final Project project) {
+
         project.extensions.create("reportingSettings", ReportingSettingsExtension)
 
         project.configurations { antClasspath }

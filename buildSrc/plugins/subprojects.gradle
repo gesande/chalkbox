@@ -10,41 +10,10 @@ import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
 
 
-
 apply plugin : JavaProjectArtifactPlugin
 apply plugin : FindbugsWithHtmlReports
-
 apply plugin : ForkPmdSettings
-
 apply plugin : JDependWithXmlReports
-
-project.jdependMain.doLast {
-    File file = new File(project.jdepend.reportsDir, "main.xml");
-    assert file.exists() && file.isFile(), "File '$file' must exist"
-    def numberOfCycles = new XmlSlurper().parse(file).Cycles.Package.size()
-    def outputFactory = services.get(StyledTextOutputFactory).create("jdependMain.doLast")
-    if (numberOfCycles > 0) {
-        outputFactory.withStyle(Style.Error).println("We have detected $numberOfCycles cycles. Checkout report file: $file.")
-        assert numberOfCycles == 0, """We have detected $numberOfCycles cycles. Checkout report file: $file."""
-    }
-    else {
-        outputFactory.withStyle(Style.Info).println("No cycles detected for project '$project.name' . Good work!")
-    }
-}
-
-project.jdependTest.doLast {
-    File file = new File(project.jdepend.reportsDir, "test.xml");
-    assert file.exists() && file.isFile(), "File '$file' must exist"
-    def numberOfCycles = new XmlSlurper().parse(file).Cycles.Package.size()
-    def outputFactory = services.get(StyledTextOutputFactory).create("jdependTest.doLast")
-    if (numberOfCycles > 0) {
-        outputFactory.withStyle(Style.Error).println("We have detected $numberOfCycles cycles. Checkout report file: $file.")
-        //assert numberOfCycles == 0, """We have detected $numberOfCycles cycles. Checkout report file: $file."""
-    }
-    else {
-        outputFactory.withStyle(Style.Info).println("No cycles detected for project '$project.name' . Good work!")
-    }
-}
 
 task testCodeAnalysis(dependsOn: [
     findbugsTest,

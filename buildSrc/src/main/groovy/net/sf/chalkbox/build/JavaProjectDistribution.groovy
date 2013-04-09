@@ -8,7 +8,7 @@ class JavaProjectDistribution implements Plugin<Project>{
 
     @Override
     public void apply(final Project project) {
-        project.getPlugins().apply("java")
+        project.plugins.apply("java")
 
         project.task('dist', type: Zip) { Zip task ->
             group = 'Distribution'

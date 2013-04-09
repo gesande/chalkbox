@@ -11,7 +11,7 @@ class NewJavaProjectPlugin implements Plugin<Project> {
 
     @Override
     public void apply(final Project project) {
-        project.getPlugins().apply("java");
+        project.plugins.apply("java");
 
         project.subprojects { apply plugin: NewJavaSubProjectPlugin  }
 

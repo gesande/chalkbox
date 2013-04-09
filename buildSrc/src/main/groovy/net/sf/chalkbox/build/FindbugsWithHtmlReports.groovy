@@ -8,8 +8,10 @@ class FindbugsWithHtmlReports implements Plugin<Project>{
 
     @Override
     public void apply(final Project project) {
-        project.getPlugins().apply("findbugs");
+        project.plugins.apply("findbugs");
+
         project.tasks.withType(FindBugs){ ignoreFailures = false }
+
         project.apply {
             [
                 project.findbugsMain,

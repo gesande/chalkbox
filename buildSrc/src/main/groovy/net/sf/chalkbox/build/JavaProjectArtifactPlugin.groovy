@@ -8,7 +8,7 @@ class JavaProjectArtifactPlugin implements Plugin<Project>{
 
     @Override
     public void apply(final Project project) {
-        project.getPlugins().apply("java");
+        project.plugins.apply("java");
 
         project.task("sourcesJar", type: Jar, dependsOn:"classes") {
             group = 'Distribution'

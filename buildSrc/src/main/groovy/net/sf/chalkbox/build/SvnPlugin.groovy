@@ -8,13 +8,14 @@ import org.gradle.logging.StyledTextOutput.Style
 
 public final class SvnPlugin implements Plugin<Project>{
 
-    private static final String GROUP = "Svn"
+    private static final String TASK_GROUP = "Svn"
 
     @Override
     public void apply(final Project project) {
+
         project.task("svnRevision") { Task task ->
             task.description='Shows svn revision grepped from svn info.'
-            task.group=GROUP
+            task.group=TASK_GROUP
 
             doLast {
                 new ByteArrayOutputStream().withStream { os ->
@@ -33,7 +34,7 @@ public final class SvnPlugin implements Plugin<Project>{
 
         project.task("svnStatus") { Task task ->
             task.description ='Shows svn st and svnversion nicely outputted.'
-            task.group = GROUP
+            task.group = TASK_GROUP
             doLast {
                 def svnStatus=""
                 new ByteArrayOutputStream().withStream { os ->
