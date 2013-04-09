@@ -7,6 +7,7 @@ class ProjectVersion implements Plugin<Project>{
 
     @Override
     public void apply(final Project project) {
+
         project.task("showVersion") {
             group 'Miscelleneous'
             description 'Prints out the version.'

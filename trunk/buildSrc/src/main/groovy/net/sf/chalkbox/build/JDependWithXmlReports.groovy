@@ -9,7 +9,8 @@ class JDependWithXmlReports implements Plugin<Project>{
 
     @Override
     public void apply(final Project project) {
-        project.getPlugins().apply("jdepend");
+        project.plugins.apply("jdepend");
+
         project.apply {
             [
                 project.jdependMain,

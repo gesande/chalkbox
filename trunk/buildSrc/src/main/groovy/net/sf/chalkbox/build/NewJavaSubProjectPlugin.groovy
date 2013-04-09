@@ -10,6 +10,7 @@ public class NewJavaSubProjectPlugin implements Plugin<Project> {
 
     @Override
     public void apply(final Project project) {
+
         project.task("createLibDirs") { Task task ->
             group 'Development'
             description 'Creates lib and lib-sources -directories under the given project.'

@@ -5,13 +5,13 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.GradleBuild
 import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
-import org.gradle.plugins.ide.eclipse.EclipsePlugin
 
 class EclipseSettingsPlugin implements Plugin<Project> {
 
     @Override
     public void apply(final Project project) {
-        project.getPlugins().apply("eclipse");
+        project.plugins.apply("eclipse");
+
         project.task ("eclipseSettings", type: GradleBuild) { GradleBuild task ->
             group = 'IDE'
             description= 'Build fresh Eclipse settings for all projects.'
