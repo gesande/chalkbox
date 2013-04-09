@@ -2,6 +2,7 @@ import net.sf.chalkbox.build.EclipseClasspathPlugin
 import net.sf.chalkbox.build.FindbugsWithHtmlReports
 import net.sf.chalkbox.build.ForkEclipseJdtPlugin
 import net.sf.chalkbox.build.ForkPmdSettings
+import net.sf.chalkbox.build.JDependWithXmlReports
 import net.sf.chalkbox.build.JavaProjectArtifactPlugin
 import net.sf.chalkbox.build.ProjectVersion
 
@@ -15,12 +16,7 @@ apply plugin : FindbugsWithHtmlReports
 
 apply plugin : ForkPmdSettings
 
-apply plugin: "jdepend"
-
-[jdependMain, jdependTest]*.reports {
-    xml.enabled true
-    text.enabled false
-}
+apply plugin : JDependWithXmlReports
 
 project.jdependMain.doLast {
     File file = new File(project.jdepend.reportsDir, "main.xml");
