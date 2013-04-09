@@ -1,4 +1,7 @@
-package net.sf.chalkbox.build;
+package net.sf.mygradlebuild.plugins;
+
+import net.sf.mygradlebuild.tasks.ExportGradleBuildFileForJavaLibraryProject;
+import net.sf.mygradlebuild.tasks.ExportGradleBuildFileForNewJavaProject;
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project

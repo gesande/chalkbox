@@ -1,13 +1,13 @@
 
 import net.sf.chalkbox.build.ChalkBoxBuildPlugin
-import net.sf.chalkbox.build.EclipseSettingsPlugin
-import net.sf.chalkbox.build.EnvironmentVariablesPlugin
 import net.sf.chalkbox.build.ExportAntBuildFilePlugin
-import net.sf.chalkbox.build.JavaDistributionPlugin
-import net.sf.chalkbox.build.MavenCentral
-import net.sf.chalkbox.build.NewJavaProjectPlugin
-import net.sf.chalkbox.build.ReportingPlugin
-import net.sf.chalkbox.build.SvnPlugin
+import net.sf.mygradlebuild.plugins.EclipseSettingsPlugin
+import net.sf.mygradlebuild.plugins.EnvironmentVariablesPlugin
+import net.sf.mygradlebuild.plugins.JavaDistributionPlugin
+import net.sf.mygradlebuild.plugins.MavenCentral
+import net.sf.mygradlebuild.plugins.NewJavaProjectPlugin
+import net.sf.mygradlebuild.plugins.ReportingPlugin
+import net.sf.mygradlebuild.plugins.SvnPlugin
 
 
 apply plugin: MavenCentral
