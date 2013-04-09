@@ -21,6 +21,7 @@ public class ChalkBoxBuildPlugin implements Plugin<Project>{
             tasks << 'exportAntBuildFile'
             tasks << 'chalkbox:continous'
             tasks << 'chalkbox:dist'
+            tasks << 'example:continous'
             tasks << 'example:dist'
 
             tasks << 'aggregateTestReport'
