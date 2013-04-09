@@ -1,0 +1,26 @@
+package net.sf.chalkbox.build
+
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.plugins.quality.Pmd
+
+class ForkPmdSettings implements Plugin<Project>{
+
+    @Override
+    public void apply(final Project project) {
+        project.getPlugins().apply("pmd");
+        project.tasks.withType(Pmd) {
+            doFirst {
+                project.copy {
+                    from project.file("${project.properties.buildTemplates}/for/pmd/.pmd")
+                    into project.projectDir
+                }
+                println "Pmd template file copied for project '${project.name}'"
+            }
+        }
+        project.apply {
+            project.pmd.ruleSetFiles = project.files(".pmd")
+            project.pmd.ignoreFailures = 'false'
+        }
+    }
+}
