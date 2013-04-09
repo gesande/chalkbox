@@ -1,6 +1,6 @@
 package net.sf.mygradlebuild.plugins
 
-import net.sf.mygradlebuild.tasks.BashExec;
+import net.sf.mygradlebuild.tasks.BashExec
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project

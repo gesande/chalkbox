@@ -1,13 +1,14 @@
 package net.sf.mygradlebuild.plugins;
 
-import net.sf.mygradlebuild.tasks.ExportGradleBuildFileForJavaLibraryProject;
-import net.sf.mygradlebuild.tasks.ExportGradleBuildFileForNewJavaProject;
+import net.sf.mygradlebuild.tasks.ExportGradleBuildFileForJavaLibraryProject
+import net.sf.mygradlebuild.tasks.ExportGradleBuildFileForNewJavaProject
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
+
 
 public class NewJavaSubProjectPlugin implements Plugin<Project> {
 
@@ -128,4 +129,3 @@ public class NewJavaSubProjectPlugin implements Plugin<Project> {
         }
     }
 }
-
