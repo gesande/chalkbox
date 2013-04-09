@@ -1,6 +1,7 @@
 project(':buildfile-generator') {
     apply from: "$emmaPlugin"
     apply plugin : net.sf.chalkbox.build.JavaProjectDistribution
+
     version ='1.0.0'
 
     tasks.withType(FindBugs){ ignoreFailures = true }
