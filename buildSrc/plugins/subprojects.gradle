@@ -1,5 +1,7 @@
 import net.sf.chalkbox.build.EclipseClasspathPlugin
 import net.sf.chalkbox.build.ForkEclipseJdtPlugin
+import net.sf.chalkbox.build.ProjectVersion
+
 
 apply from: "$buildPlugins/continous.gradle"
 apply from: "$buildPlugins/codeAnalysis.gradle"
@@ -11,8 +13,4 @@ apply plugin: EclipseClasspathPlugin
 
 version = "$artifactVersion"
 
-task "showVersion" {
-    group 'Misc'
-    description 'Prints out the version.'
-    doLast {  println version }
-}
+apply plugin: ProjectVersion
