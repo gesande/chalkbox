@@ -17,7 +17,7 @@ class JavaProjectDistribution implements Plugin<Project>{
             task.dependsOn("jar")
             task.from project.jar
             task.from project.configurations.runtime
-            task.exclude('junit-4.10-1.0.0.jar')
+            task.exclude(project.properties.distributionExcludes)
         }
 
         project.artifacts {
@@ -31,7 +31,7 @@ class JavaProjectDistribution implements Plugin<Project>{
             task.dependsOn 'jar'
             task.from project.testSourcesJar
             task.from project.configurations.testRuntime
-            task.exclude('junit-4.10-1.0.0.jar')
+            task.exclude(project.properties.distributionExcludes)
         }
 
         project.task('release', dependsOn: ['dist', 'sourcesJar']) {
