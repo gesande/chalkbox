@@ -3,6 +3,7 @@ package net.sf.chalkbox;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 public class MarkerExample {
     public static void main(String[] args) throws IOException {
@@ -28,7 +29,7 @@ public class MarkerExample {
         final String content = sb.toString();
         System.out.println(content);
         try {
-            out.write(content.getBytes());
+            out.write(content.getBytes(Charset.defaultCharset()));
         } finally {
             out.flush();
             out.close();
