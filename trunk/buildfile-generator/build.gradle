@@ -1,8 +1,8 @@
 project(':buildfile-generator') {
     apply from: "$emmaPlugin"
-    apply plugin : net.sf.chalkbox.build.JavaProjectDistribution
+    apply plugin : net.sf.mygradlebuild.plugins.JavaProjectDistribution
 
-    version ='1.0.0'
+    version ='1.1.0'
 
     tasks.withType(FindBugs){ ignoreFailures = true }
 
