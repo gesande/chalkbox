@@ -1,22 +1,13 @@
 import net.sf.chalkbox.build.EclipseClasspathPlugin
-import net.sf.chalkbox.build.EclipseJdtPlugin
+import net.sf.chalkbox.build.ForkEclipseJdtPlugin
 
 apply from: "$buildPlugins/continous.gradle"
 apply from: "$buildPlugins/codeAnalysis.gradle"
 
-apply plugin: EclipseJdtPlugin
-
-/*
-apply plugin: "eclipse"
-project.eclipseJdt {
-    def jdtInputFile ="${project.properties.buildTemplates}/for/eclipse/org.eclipse.jdt.core.prefs"
-    inputFile=project.file("${jdtInputFile}")
-    doLast { println "Forked eclipseJdt.inputFile from ${jdtInputFile} for project '${project.name}'" }
-}
-*/
+apply plugin: ForkEclipseJdtPlugin
+forkJdt { jdtInputFile = "${project.properties.buildTemplates}/for/eclipse/org.eclipse.jdt.core.prefs" }
 
 apply plugin: EclipseClasspathPlugin
-
 
 version = "$artifactVersion"
 
