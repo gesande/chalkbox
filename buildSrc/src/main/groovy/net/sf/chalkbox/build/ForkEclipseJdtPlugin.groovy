@@ -12,7 +12,7 @@ class ForkEclipseJdtPlugin implements Plugin<Project>{
         project.apply {
             project.eclipseJdt {
                 def jdtInputFile ="${project.properties.buildTemplates}/for/eclipse/org.eclipse.jdt.core.prefs"
-                inputFile=project.file("${jdtInputFile}")
+                inputFile=project.file(jdtInputFile)
                 doLast { println "Forked eclipseJdt.inputFile from ${jdtInputFile} for project '${project.name}'" }
             }
         }

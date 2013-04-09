@@ -2,15 +2,141 @@ import net.sf.chalkbox.build.EclipseClasspathPlugin
 import net.sf.chalkbox.build.ForkEclipseJdtPlugin
 import net.sf.chalkbox.build.ProjectVersion
 
+import org.gradle.api.plugins.quality.FindBugs
+import org.gradle.api.plugins.quality.Pmd
+import org.gradle.api.tasks.bundling.Jar
+import org.gradle.logging.StyledTextOutputFactory
+import org.gradle.logging.StyledTextOutput.Style
 
-apply from: "$buildPlugins/continous.gradle"
-apply from: "$buildPlugins/codeAnalysis.gradle"
+
+apply plugin: "java"
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+    group = 'Distribution'
+    description = "Makes the project specific sourceJar."
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task testSourcesJar(type: Jar, dependsOn:classes) {
+    group = 'Distribution'
+    description = "Makes the project specific testSourceJar."
+    classifier = 'tests'
+    from sourceSets.test.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    group = 'Distribution'
+    description = "Makes the project specific javadoc jar."
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+apply plugin: 'findbugs'
+
+tasks.withType(FindBugs){ ignoreFailures = false }
+
+[findbugsMain, findbugsTest]*.reports {
+    xml.enabled false
+    html.enabled true
+}
+
+
+apply plugin: 'pmd'
+
+tasks.withType(Pmd) {
+    doFirst { task ->
+        copy {
+            from file("${buildTemplates}/for/pmd/.pmd")
+            into task.project.projectDir
+        }
+        println "Pmd template file copied for project $task.project.name"
+    }
+}
+
+pmd.ruleSetFiles = files(".pmd")
+pmd.ignoreFailures = 'false'
+
+
+apply plugin: "jdepend"
+
+[jdependMain, jdependTest]*.reports {
+    xml.enabled true
+    text.enabled false
+}
+
+jdependMain.doLast {
+    File file = new File(jdepend.reportsDir, "main.xml");
+    assert file.exists() && file.isFile(), "File '$file' must exist"
+    def numberOfCycles = new XmlSlurper().parse(file).Cycles.Package.size()
+    def outputFactory = services.get(StyledTextOutputFactory).create("jdependMain.doLast")
+    if (numberOfCycles > 0) {
+        outputFactory.withStyle(Style.Error).println("We have detected $numberOfCycles cycles. Checkout report file: $file.")
+        assert numberOfCycles == 0, """We have detected $numberOfCycles cycles. Checkout report file: $file."""
+    }
+    else {
+        outputFactory.withStyle(Style.Info).println("No cycles detected for project '$project.name' . Good work!")
+    }
+}
+
+jdependTest.doLast {
+    File file = new File(jdepend.reportsDir, "test.xml");
+    assert file.exists() && file.isFile(), "File '$file' must exist"
+    def numberOfCycles = new XmlSlurper().parse(file).Cycles.Package.size()
+    def outputFactory = services.get(StyledTextOutputFactory).create("jdependTest.doLast")
+    if (numberOfCycles > 0) {
+        outputFactory.withStyle(Style.Error).println("We have detected $numberOfCycles cycles. Checkout report file: $file.")
+        //assert numberOfCycles == 0, """We have detected $numberOfCycles cycles. Checkout report file: $file."""
+    }
+    else {
+        outputFactory.withStyle(Style.Info).println("No cycles detected for project '$project.name' . Good work!")
+    }
+}
+
+
+
+task testCodeAnalysis(dependsOn: [
+    findbugsTest,
+    pmdTest,
+    jdependTest
+]) {
+    group = 'Verification'
+    description = 'Analyze test code with pmd/findbugs/jdepend'
+    doLast {
+        def outputFactory = services.get(StyledTextOutputFactory).create("testCodeAnalysis")
+        outputFactory.withStyle(Style.Info).println("Test code analyzed for $project ")
+    }
+}
+
+task mainCodeAnalysis(dependsOn: [
+    findbugsMain,
+    pmdMain,
+    jdependMain
+]) {
+    group = 'Verification'
+    description = 'Analyze main code with pmd/findbugs/jdepend'
+    doLast {
+        def outputFactory = services.get(StyledTextOutputFactory).create("mainCodeAnalysis")
+        outputFactory.withStyle(Style.Info).println("Main code analyzed for $project ")
+    }
+}
+
+task continous(dependsOn: [
+    test,
+    findbugsMain,
+    pmdMain,
+    jdependMain
+]) {
+    group = 'Verification'
+    description = 'Continous build task including junit tests/pmd/findbugs/jdepend'
+    doLast {
+        def outputFactory = services.get(StyledTextOutputFactory).create("continous")
+        outputFactory.withStyle(Style.Info).println("Continous build for $project passed. Good work!")
+    }
+}
 
 apply plugin: ForkEclipseJdtPlugin
 forkJdt { jdtInputFile = "${project.properties.buildTemplates}/for/eclipse/org.eclipse.jdt.core.prefs" }
 
 apply plugin: EclipseClasspathPlugin
-
-version = "$artifactVersion"
-
 apply plugin: ProjectVersion
