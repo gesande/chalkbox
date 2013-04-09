@@ -1,39 +1,5 @@
-import net.sf.chalkbox.build.CodeAnalysis;
-import net.sf.chalkbox.build.EclipseClasspathPlugin
-import net.sf.chalkbox.build.FindbugsWithHtmlReports
-import net.sf.chalkbox.build.ForkEclipseJdtPlugin
-import net.sf.chalkbox.build.ForkPmdSettings
-import net.sf.chalkbox.build.JDependWithXmlReports
-import net.sf.chalkbox.build.JavaProjectArtifactPlugin
-import net.sf.chalkbox.build.ProjectVersion
+import net.sf.chalkbox.build.DefaultContinousBuildPlugin
 
-import org.gradle.logging.StyledTextOutputFactory
-import org.gradle.logging.StyledTextOutput.Style
-
-
-apply plugin : JavaProjectArtifactPlugin
-apply plugin : FindbugsWithHtmlReports
-apply plugin : ForkPmdSettings
-apply plugin : JDependWithXmlReports
-apply plugin : CodeAnalysis
-
-
-task continous(dependsOn: [
-    test,
-    findbugsMain,
-    pmdMain,
-    jdependMain
-]) {
-    group = 'Verification'
-    description = 'Continous build task including junit tests/pmd/findbugs/jdepend'
-    doLast {
-        def outputFactory = services.get(StyledTextOutputFactory).create("continous")
-        outputFactory.withStyle(Style.Info).println("Continous build for $project passed. Good work!")
-    }
-}
-
-apply plugin: ForkEclipseJdtPlugin
+apply plugin : DefaultContinousBuildPlugin
 forkJdt { jdtInputFile = "${project.properties.buildTemplates}/for/eclipse/org.eclipse.jdt.core.prefs" }
 
-apply plugin: EclipseClasspathPlugin
-apply plugin: ProjectVersion
