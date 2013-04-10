@@ -193,15 +193,17 @@ public class ReportingPlugin implements Plugin<Project>{
         project.task("archiveAggregateReports", type: Tar)  { Tar task ->
             group = 'Archive'
             description = 'Archive aggregate reports including junit tests/pmd/findbugs/jdepend'
-            from ("${project.properties.reportDirectory}")
+            def timestamp = new Date(System.currentTimeMillis()).format("yyyy-MM-dd-hhmmss")
+            from (project.properties.reportDir)
             // Set destination directory.
-            task.destinationDir = project.file("${project.properties.cacheDir}")
+            task.destinationDir = project.file(project.properties.cacheDir)
             // Set filename properties.
-            task.baseName = "report-artifacts-${project.properties.artifactVersion}"
+            task.baseName = "report-artifacts-${timestamp}"
             extension = 'tar.gz'
+            //task.version = "${project.properties.artifactVersion}"
             compression = Compression.GZIP
             doLast {
-                def String tarFile = "${project.properties.cacheDir}/report-artifacts-${project.properties.artifactVersion}.tar.gz"
+                def String tarFile = "${project.properties.cacheDir}/${task.archiveName}"
                 def outputFactory = services.get(StyledTextOutputFactory).create("reporting.archiveAggregateReports")
                 outputFactory.withStyle(Style.Info).println("Report artifact archive can be found from file://$tarFile")
             }

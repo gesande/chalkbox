@@ -10,7 +10,7 @@ ext.toolsDir="$projectDir/tools"
 ext.svnIgnoreFile="$buildScripts/svn/svn-ignore"
 ext.artifactVersion='1.0.1'
 ext.distributionExcludes = "junit-4.10-1.0.0.jar"
-
+ext.distributionBasename = 'chalkbox-distribution'
 version = "$artifactVersion"
 
 apply from: "$buildPlugins/allprojects.gradle"

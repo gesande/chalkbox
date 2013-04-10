@@ -57,7 +57,7 @@ public class JavaDistributionPlugin implements Plugin<Project>{
                 revision = os.toString().trim()
             }
             def String artifactRevision="${project.properties.artifactVersion}-R${revision}"
-            def String distributionName = "chalkbox-distribution"
+            def String distributionName = project.properties.distributionBasename
             from project.file('distribution')
             destinationDir = project.file("${project.properties.distributionDir}/artifact-${artifactRevision}")
             baseName = "$distributionName"
