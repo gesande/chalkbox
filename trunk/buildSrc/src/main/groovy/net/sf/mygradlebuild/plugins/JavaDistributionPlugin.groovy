@@ -13,7 +13,6 @@ public class JavaDistributionPlugin implements Plugin<Project>{
 
     @Override
     public void apply(final Project project) {
-
         project.task("copyDistributionSourceJars") {
             group = 'Distribution'
             description = "Copies project specific source jars to the distribution sources directory."

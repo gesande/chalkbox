@@ -1,6 +1,6 @@
-
 import net.sf.chalkbox.build.ChalkBoxBuildPlugin
 import net.sf.chalkbox.build.ExportAntBuildFilePlugin
+import net.sf.mygradlebuild.plugins.DefaultContinousBuildPlugin
 import net.sf.mygradlebuild.plugins.EclipseSettingsPlugin
 import net.sf.mygradlebuild.plugins.EnvironmentVariablesPlugin
 import net.sf.mygradlebuild.plugins.JavaDistributionPlugin
@@ -9,6 +9,26 @@ import net.sf.mygradlebuild.plugins.NewJavaProjectToSvnPlugin
 import net.sf.mygradlebuild.plugins.ReportingPlugin
 import net.sf.mygradlebuild.plugins.SvnPlugin
 
+
+//chalkbox build script
+
+ext {
+    jdtInputFile="${buildScripts}/template/for/eclipse/org.eclipse.jdt.core.prefs"
+    pmdSettings="${buildScripts}/template/for/pmd/.pmd"
+
+    distributionDir="$buildDir/distributions"
+
+    toolsDir="${projectDir}/tools"
+
+    emmaPlugin="${buildScripts}/plugins/emma.gradle"
+
+    artifactVersion='1.0.1'
+
+    distributionExcludes = ["junit-4.10-1.0.0.jar"]
+    distributionBasename = 'chalkbox-distribution'
+}
+
+version = "$artifactVersion"
 
 apply plugin: MavenCentral
 apply plugin: NewJavaProjectToSvnPlugin
@@ -21,7 +41,9 @@ apply plugin : ExportAntBuildFilePlugin
 
 apply plugin : ChalkBoxBuildPlugin
 
-reportingSettings {
-    reportDirectory = "${reportDir}"
-    toolsDirectory = "${toolsDir}"
+reportingSettings { toolsDirectory = "${toolsDir}" }
+
+subprojects {
+    apply plugin : DefaultContinousBuildPlugin
+    forkJdt { jdtInputFile = "${project.properties.jdtInputFile}"  }
 }

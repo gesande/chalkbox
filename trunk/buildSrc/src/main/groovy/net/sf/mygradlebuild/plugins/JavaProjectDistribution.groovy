@@ -18,6 +18,7 @@ class JavaProjectDistribution implements Plugin<Project>{
             task.from project.jar
             task.from project.configurations.runtime
             task.exclude(project.properties.distributionExcludes)
+            doLast { println "Following libraries were excluded when making the $project.name dist: ${project.properties.distributionExcludes} " }
         }
 
         project.artifacts {
@@ -32,6 +33,7 @@ class JavaProjectDistribution implements Plugin<Project>{
             task.from project.testSourcesJar
             task.from project.configurations.testRuntime
             task.exclude(project.properties.distributionExcludes)
+            doLast { println "Following libraries were excluded when making the $project.name testCodeDist: ${project.properties.distributionExcludes} " }
         }
 
         project.task('release', dependsOn: ['dist', 'sourcesJar']) {

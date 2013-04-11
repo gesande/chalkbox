@@ -1,6 +1,0 @@
-import net.sf.mygradlebuild.plugins.DefaultContinousBuildPlugin
-
-
-apply plugin : DefaultContinousBuildPlugin
-forkJdt { jdtInputFile = "${project.properties.jdtInputFile}"  }
-

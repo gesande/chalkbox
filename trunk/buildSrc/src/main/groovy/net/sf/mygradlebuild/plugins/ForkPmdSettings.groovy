@@ -13,7 +13,7 @@ class ForkPmdSettings implements Plugin<Project>{
         project.tasks.withType(Pmd) {
             doFirst {
                 project.copy {
-                    from project.file("${project.properties.buildTemplates}/for/pmd/.pmd")
+                    from project.file("${project.properties.pmdSettings}")
                     into project.projectDir
                 }
                 println "Pmd template file copied for project '${project.name}'"
