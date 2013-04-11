@@ -1,16 +1,21 @@
 ext.buildScripts="$projectDir/buildSrc"
 ext.buildTemplates="$buildScripts/template"
+ext.jdtInputFile="${buildTemplates}/for/eclipse/org.eclipse.jdt.core.prefs"
+
 ext.buildPlugins="$buildScripts/plugins/"
+
 ext.libraryPlugin="$buildPlugins/library.gradle"
 ext.cacheDir="$projectDir/.cached"
 ext.reportDir="$cacheDir/reports"
 ext.emmaPlugin="$buildPlugins/emma.gradle"
 ext.distributionDir="$cacheDir/distribution"
 ext.toolsDir="$projectDir/tools"
-ext.svnIgnoreFile="$buildScripts/svn/svn-ignore"
+
 ext.artifactVersion='1.0.1'
+
 ext.distributionExcludes = "junit-4.10-1.0.0.jar"
 ext.distributionBasename = 'chalkbox-distribution'
+
 version = "$artifactVersion"
 
 apply from: "$buildPlugins/allprojects.gradle"

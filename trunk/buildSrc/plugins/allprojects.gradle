@@ -5,13 +5,13 @@ import net.sf.mygradlebuild.plugins.EclipseSettingsPlugin
 import net.sf.mygradlebuild.plugins.EnvironmentVariablesPlugin
 import net.sf.mygradlebuild.plugins.JavaDistributionPlugin
 import net.sf.mygradlebuild.plugins.MavenCentral
-import net.sf.mygradlebuild.plugins.NewJavaProjectPlugin
+import net.sf.mygradlebuild.plugins.NewJavaProjectToSvnPlugin
 import net.sf.mygradlebuild.plugins.ReportingPlugin
 import net.sf.mygradlebuild.plugins.SvnPlugin
 
 
 apply plugin: MavenCentral
-apply plugin: NewJavaProjectPlugin
+apply plugin: NewJavaProjectToSvnPlugin
 apply plugin : ReportingPlugin
 apply plugin : JavaDistributionPlugin
 apply plugin : EnvironmentVariablesPlugin

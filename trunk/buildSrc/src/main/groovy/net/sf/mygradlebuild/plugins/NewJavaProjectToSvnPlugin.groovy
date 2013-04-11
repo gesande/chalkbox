@@ -8,23 +8,23 @@ import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
 
 
-class NewJavaProjectPlugin implements Plugin<Project> {
+class NewJavaProjectToSvnPlugin implements Plugin<Project> {
 
     @Override
     public void apply(final Project project) {
         project.plugins.apply("java");
 
-        project.subprojects { apply plugin: NewJavaSubProjectPlugin  }
+        project.subprojects { apply plugin: NewJavaSubProjectUsingSvnPlugin  }
 
         project.task("newJavaProject", type: GradleBuild) { GradleBuild task ->
             group ='Development'
-            description ="Creates a new Java project putting it already to SVN and applying some SVN ignore magic from predefined file which seem to be ${project.properties.svnIgnoreFile}. Needs -PnewJavaProject argument."
+            description ="Creates a new Java project putting it already to SVN and applying some SVN ignore magic from generated file. This task required -PnewJavaProject -argument."
             def javaProject =  task.project.properties.newJavaProject
             String createJavaDirs = "${javaProject}:createJavaDirs"
             String eclipseSettingsFor = "${javaProject}:eclipseSettingsFor"
             String buildGradle = "${javaProject}:buildGradleForJavaProject"
             String svnAdd = "${javaProject}:addProjectToSvn"
-            String svnIgnore = "${javaProject}:applySvnIgnore"
+            String svnIgnore = "${javaProject}:applySvnIgnoreFromGeneratedFile"
             task.tasks << createJavaDirs
             task.tasks << svnAdd
             task.tasks << svnIgnore
@@ -38,12 +38,12 @@ class NewJavaProjectPlugin implements Plugin<Project> {
 
         project.task("newJavaLibProject", type: GradleBuild) { GradleBuild task ->
             group ='Development'
-            description ="Creates a new Java library project putting it already to SVN and applying some SVN ignore magic from predefined file which seem to be ${project.properties.svnIgnoreFile}. Needs -PnewJavaProject argument."
+            description ="Creates a new Java library project putting it already to SVN and applying some SVN ignore magic from generated file. This task required -PnewJavaProject -argument."
             def javaProject =  task.project.properties.newJavaProject
             String createJavaDirs = "${javaProject}:createJavaDirs"
             String eclipseSettingsFor = "${javaProject}:eclipseSettingsFor"
             String svnAdd = "${javaProject}:addProjectToSvn"
-            String svnIgnore = "${javaProject}:applySvnIgnore"
+            String svnIgnore = "${javaProject}:applySvnIgnoreFromGeneratedFile"
             String createLibDirs="${javaProject}:createLibDirs"
             String buildGradle = "${javaProject}:buildGradleForJavaLibProject"
 
