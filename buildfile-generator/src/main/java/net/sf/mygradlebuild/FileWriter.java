@@ -5,11 +5,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 
-class FileWriter {
-    @SuppressWarnings("static-method")
+public final class FileWriter {
+
     public void writeToFile(final File parent, final String contents,
             final String newFile) throws IOException {
-        write(withWriter(toFile(parent, newFile)), contents);
+        writeToFile(toFile(parent, newFile), contents);
+    }
+
+    @SuppressWarnings("static-method")
+    public void writeToFile(final File fileToWrite, final String contents)
+            throws IOException {
+        write(withWriter(fileToWrite), contents);
     }
 
     private static Writer withWriter(final File file) throws IOException {
