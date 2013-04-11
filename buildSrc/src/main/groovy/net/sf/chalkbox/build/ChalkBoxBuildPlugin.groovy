@@ -11,17 +11,17 @@ public class ChalkBoxBuildPlugin implements Plugin<Project>{
     public void apply(Project project) {
 
         project.task("continousBuild", type: GradleBuild) { Task task ->
-            group = 'Chalkbox verification'
+            group = 'Verification'
             description ='Continous build for the whole thing. Works also as a license to commit build target.'
             buildFile = 'build.gradle'
             tasks << 'clean'
-            //tasks << 'applySvnIgnore'
             tasks << 'eclipseSettings'
             tasks << 'refreshBuildFileGenerator'
+            tasks << 'applySvnIgnoreFromGeneratedFile'
             tasks << 'exportAntBuildFile'
             tasks << 'chalkbox:continous'
-            tasks << 'chalkbox:dist'
             tasks << 'example:continous'
+            tasks << 'chalkbox:dist'
             tasks << 'example:dist'
 
             tasks << 'aggregateTestReport'
@@ -33,7 +33,7 @@ public class ChalkBoxBuildPlugin implements Plugin<Project>{
         }
 
         project.task("distributionPackage", type: GradleBuild, dependsOn: ['continousBuild']) { Task task ->
-            group = 'Chalkbox distribution'
+            group = 'Distribution'
             description = 'Distribution package for the whole thing including continous build.'
             buildFile = 'build.gradle'
             tasks << 'chalkbox:release'

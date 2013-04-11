@@ -10,6 +10,9 @@ import org.gradle.logging.StyledTextOutputFactory
  * - added stylish printing 
  * - checking the coverage 
  * 
+ * TODO: try to make this a Project<Plugin> or make this simplier by
+ * 
+ * taking a look at http://git.springsource.org/spring-security/spring-security/blobs/5fe589e36074d51409c9ad5f87daf6564877534c/gradle/emma.gradle
  */
 
 apply plugin:'java'

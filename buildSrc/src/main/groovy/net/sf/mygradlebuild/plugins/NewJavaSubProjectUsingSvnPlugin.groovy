@@ -108,7 +108,9 @@ public class NewJavaSubProjectUsingSvnPlugin implements Plugin<Project> {
         project.task("buildGradleForJavaLibProject",type: ExportGradleBuildFileForJavaLibraryProject) { ExportGradleBuildFileForJavaLibraryProject task ->
             task.parent = task.project.projectDir
             task.projectName = task.project.name
-            task.applyFroms = ["\"\$libraryPlugin\""]
+            task.applyFroms = [
+                "net.sf.mygradlebuild.plugins.JavaLibraryProject"
+            ]
             task.library = task.project.name
         }
     }

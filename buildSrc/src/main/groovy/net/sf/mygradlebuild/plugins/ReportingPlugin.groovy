@@ -23,7 +23,7 @@ public class ReportingPlugin implements Plugin<Project>{
             group = 'Reporting'
             description = "Prints out reporting plugin options"
             doLast {
-                println "reportDir = ${project.reportingSettings.reportDirectory}"
+                println "reportDir = ${project.buildDir}/reports}"
                 println "toolsDir = ${project.reportingSettings.toolsDirectory}"
             }
         }
@@ -36,7 +36,7 @@ public class ReportingPlugin implements Plugin<Project>{
                 project.configurations.antClasspath.each { File f ->
                     antClassLoader.addURL(f.toURI().toURL())
                 }
-                def targetDir = new File("${project.reportingSettings.reportDirectory}", 'junit')
+                def targetDir = new File("${project.buildDir}/reports}", 'junit')
                 targetDir.mkdirs()
                 def resultsDir=targetDir.getPath()
                 println 'Creating test report...'
@@ -60,7 +60,7 @@ public class ReportingPlugin implements Plugin<Project>{
             group = 'Reporting'
             description = "Makes aggregate coverage report with emma."
             doLast {
-                def targetDir = new File("${project.reportingSettings.reportDirectory}", 'emma')
+                def targetDir = new File("${project.buildDir}/reports}", 'emma')
                 targetDir.deleteDir()
                 targetDir.mkdirs()
                 def List<String> inArgs= new ArrayList<String>()
@@ -97,10 +97,10 @@ public class ReportingPlugin implements Plugin<Project>{
             group = 'Reporting'
             description = "Makes aggregate jdepend report with tattletale."
             doLast {
-                def targetDir = new File("$project.reportingSettings.reportDirectory", 'jdepend')
+                def targetDir = new File("${project.buildDir}/reports}", 'jdepend')
                 targetDir.deleteDir()
                 targetDir.mkdirs()
-                def jarsDir= new File("${project.reportingSettings.reportDirectory}/analyzed-jars")
+                def jarsDir= new File("${project.buildDir}/reports/analyzed-jars")
                 jarsDir.deleteDir()
                 jarsDir.mkdirs()
                 def FileTree jars = project.fileTree("${project.projectDir}").include('**/build/libs/*.jar')
@@ -131,7 +131,7 @@ public class ReportingPlugin implements Plugin<Project>{
             group ='Reporting'
             description = 'Makes aggregate findbugs report.'
             doLast {
-                def targetDir = new File("${project.reportingSettings.reportDirectory}", 'findbugs')
+                def targetDir = new File("${project.buildDir}/reports}", 'findbugs')
                 targetDir.deleteDir()
                 targetDir.mkdirs()
                 def String jreHome = "${System.getenv('JAVA_HOME')}/jre"
@@ -190,29 +190,35 @@ public class ReportingPlugin implements Plugin<Project>{
                 outputFactory.withStyle(Style.Info).println("Findbugs report can be found from file://${targetDir}/index.html)")
             }
         }
+        project.gradle.projectsEvaluated { addTasksAfterProjectsEvaluated(project) }
+    }
+
+    void addTasksAfterProjectsEvaluated(final Project project){
         project.task("archiveAggregateReports", type: Tar)  { Tar task ->
             group = 'Archive'
             description = 'Archive aggregate reports including junit tests/pmd/findbugs/jdepend'
-            def timestamp = new Date(System.currentTimeMillis()).format("yyyy-MM-dd-hhmmss")
-            from (project.properties.reportDir)
+            def timestamp = new Date(System.currentTimeMillis()).format("yyyyMMdd-HHmmss")
+            from ("${project.buildDir}/reports")
             // Set destination directory.
-            task.destinationDir = project.file(project.properties.cacheDir)
+            def File parent = project.file("${project.buildDir}/reports}").getParentFile()
+            task.destinationDir = parent
             // Set filename properties.
             task.baseName = "report-artifacts-${timestamp}"
             extension = 'tar.gz'
             //task.version = "${project.properties.artifactVersion}"
             compression = Compression.GZIP
             doLast {
-                def String tarFile = "${project.properties.cacheDir}/${task.archiveName}"
+                def String tarFile = "${parent}/${task.archiveName}"
                 def outputFactory = services.get(StyledTextOutputFactory).create("reporting.archiveAggregateReports")
                 outputFactory.withStyle(Style.Info).println("Report artifact archive can be found from file://$tarFile")
             }
         }
+
     }
+
 }
 
 class ReportingSettingsExtension {
     String toolsDirectory
-    String reportDirectory
 }
 
