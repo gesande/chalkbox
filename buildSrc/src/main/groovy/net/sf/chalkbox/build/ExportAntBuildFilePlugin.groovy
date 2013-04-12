@@ -21,6 +21,7 @@ public final class ExportAntBuildFilePlugin implements Plugin<Project>{
                 "eclipseSettings",
                 "exportAntBuildFile",
                 "refreshBuildFileGenerator",
+                "buildMyGradleBuild",
                 "tasks"
             ]
         }

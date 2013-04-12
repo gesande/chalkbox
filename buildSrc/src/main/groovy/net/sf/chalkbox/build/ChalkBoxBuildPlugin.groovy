@@ -3,6 +3,7 @@ package net.sf.chalkbox.build
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.file.CopySpec
 import org.gradle.api.tasks.GradleBuild
 
 public class ChalkBoxBuildPlugin implements Plugin<Project>{
@@ -16,7 +17,7 @@ public class ChalkBoxBuildPlugin implements Plugin<Project>{
             buildFile = 'build.gradle'
             tasks << 'clean'
             tasks << 'eclipseSettings'
-            tasks << 'refreshBuildFileGenerator'
+            //tasks << 'refreshBuildFileGenerator'
             tasks << 'applySvnIgnoreFromGeneratedFile'
             tasks << 'exportAntBuildFile'
             tasks << 'chalkbox:continous'
@@ -44,8 +45,7 @@ public class ChalkBoxBuildPlugin implements Plugin<Project>{
 
         project.task("buildBuildFileGenerator", type: GradleBuild) { GradleBuild task ->
             group = 'Chalkbox build'
-            description = 'Runs continous and release to buildfile-generator module.'
-
+            description = 'Runs continous and release for buildfile-generator module.'
             tasks << 'buildfile-generator:continous'
             tasks << 'buildfile-generator:release'
         }
@@ -56,15 +56,25 @@ public class ChalkBoxBuildPlugin implements Plugin<Project>{
             doLast {
                 def artifact = "buildfile-generator-1.1.0"
                 def libs= project.file('buildfile-generator/build/libs')
-                def lib = project.file('buildSrc/lib')
+                def buildSrcLib = project.file('buildSrc/lib')
                 def libSources = project.file('buildSrc/lib-sources')
-                project.copy {
-                    from "${libs}/${artifact}.jar"
-                    into lib
+                project.copy { CopySpec spec ->
+                    spec.from "${libs}/${artifact}.jar"
+                    spec.into buildSrcLib
                 }
-                project. copy {
-                    from "${libs}/${artifact}-sources.jar"
-                    into libSources
+                project. copy { CopySpec spec ->
+                    spec.from "${libs}/${artifact}-sources.jar"
+                    spec.into libSources
+                }
+                def mygradlebuildLib = project.file('my-gradle-build/lib')
+                def mygradlebuildLibSources = project.file('my-gradle-build/lib-sources')
+                project.copy { CopySpec spec ->
+                    spec.from "${libs}/${artifact}.jar"
+                    spec.into mygradlebuildLib
+                }
+                project. copy { CopySpec spec ->
+                    spec.from "${libs}/${artifact}-sources.jar"
+                    spec.into mygradlebuildLibSources
                 }
             }
         }
