@@ -1,7 +1,9 @@
-import static org.gradle.logging.StyledTextOutput.Style
-
-import org.gradle.logging.StyledTextOutput
+import org.gradle.api.plugins.quality.FindBugs
+import org.gradle.api.plugins.quality.Pmd
+import org.gradle.api.tasks.GradleBuild
+import org.gradle.api.tasks.bundling.Jar
 import org.gradle.logging.StyledTextOutputFactory
+import org.gradle.logging.StyledTextOutput.Style
 import org.gradle.plugins.ide.eclipse.model.AbstractLibrary
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.ClasspathEntry
@@ -11,8 +13,11 @@ import org.gradle.plugins.ide.eclipse.model.internal.FileReferenceFactory
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
 apply plugin: 'java'
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
 
-repositories {  flatDir { dirs 'lib' }  }
+repositories {  flatDir { dirs 'lib'
+    }  }
 
 dependencies {
     compile gradleApi()
@@ -20,24 +25,53 @@ dependencies {
     compile fileTree(dir: 'lib', include: '*.jar', exclude: '*-sources.jar')
 }
 
-eclipse.classpath.defaultOutputDir = file('target/classes')
-ext.library='buildfile-generator-1.1.0'
+version = "1.0.0"
+ext.jdtInputFile = "eclipseJdt/org.eclipse.jdt.core.prefs"
+ext.pmdSettingsFile = "pmd/.pmd"
 
-eclipse {
+project.tasks.withType(Pmd) {
+    doFirst {
+        project.copy {
+            from project.file(pmdSettingsFile)
+            into project.projectDir
+        }
+        println "Pmd template file copied for project '${project.name}'"
+    }
+}
+project.pmd.ruleSetFiles = project.files(".pmd")
+project.pmd.ignoreFailures = 'false'
+
+
+project.tasks.withType(FindBugs) { ignoreFailures = false }
+
+[
+    project.findbugsMain,
+    project.findbugsTest
+]*.reports {
+    xml.enabled false
+    html.enabled true
+}
+
+
+project.eclipse.classpath.defaultOutputDir = file('target/classes')
+
+project.ext.junitLib='junit-4.10'
+
+project.eclipse {
     classpath {
         file {
-            whenMerged {Classpath cp ->
+            whenMerged { Classpath cp ->
                 String gradleHome = gradle.getGradleHomeDir().absolutePath.replace(File.separator, '/')
                 String gradleSrc = "${gradleHome}/src"
                 def entrySourcePath = new FileReferenceFactory().fromPath(gradleSrc)
                 def outputFactory = services.get(StyledTextOutputFactory).create("gradlePlugins.eclipseClasspath")
-                cp.entries.each {ClasspathEntry entry ->
+                cp.entries.each { ClasspathEntry entry ->
                     if ((entry in AbstractLibrary) && (entry.library.file.name.startsWith('gradle-'))) {
                         entry.sourcePath = entrySourcePath
-                        outputFactory.withStyle(Style.Info).println("Forked for patch for ${entry}")
+                        outputFactory.withStyle(Style.Info).println("Forked source path for ${entry}")
                     }
-                    if( (entry in AbstractLibrary) && (entry.library.file.name.startsWith("${library}")) ) {
-                        entry.sourcePath = new FileReferenceFactory().fromPath("${projectDir}/lib-sources/${library}-sources.jar")
+                    if( (entry in AbstractLibrary) && (entry.library.file.name.startsWith("${junitLib}")) ) {
+                        entry.sourcePath = new FileReferenceFactory().fromPath("${projectDir}/lib-sources/${junitLib}-src.jar")
                     }
                 }
             }
@@ -45,3 +79,24 @@ eclipse {
     }
 }
 
+project.eclipseJdt {
+    inputFile=project.file(jdtInputFile)
+    doLast { println "Forked eclipseJdt.inputFile from ${jdtInputFile}." }
+}
+
+project.task("sourcesJar", type: Jar, dependsOn:"classes") {
+    group = 'Distribution'
+    description = "Makes the project specific sourceJar."
+    classifier = 'sources'
+    from project.sourceSets.main.allSource
+}
+
+project.task("release", type: GradleBuild) { GradleBuild task ->
+    //task.dependsOn "refreshBuildFileGenerator"
+    group = 'Build'
+    task.buildFile = 'build.gradle'
+    description = 'Runs tests,jar and sourceJar targets.'
+    task.tasks << 'test'
+    task.tasks << 'jar'
+    task.tasks << 'sourcesJar'
+}
