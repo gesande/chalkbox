@@ -17,7 +17,8 @@ apply plugin: 'java'
 apply plugin: 'pmd'
 apply plugin: 'findbugs'
 
-repositories {  flatDir { dirs 'lib' }  }
+repositories {  flatDir { dirs 'lib'
+    }  }
 
 dependencies {
     compile gradleApi()
@@ -116,7 +117,7 @@ project.task('runtimeDistribution', type: Zip) { Zip task ->
     task.dependsOn("jar")
     task.from project.jar
     task.from project.configurations.runtime
-    task.excludes 'junit-4.10.jar'
+    task.exclude 'junit-4.10.jar'
 }
 
 project.artifacts {
