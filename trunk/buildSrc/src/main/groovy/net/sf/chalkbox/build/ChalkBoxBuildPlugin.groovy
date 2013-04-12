@@ -16,7 +16,6 @@ public class ChalkBoxBuildPlugin implements Plugin<Project>{
             buildFile = 'build.gradle'
             tasks << 'clean'
             tasks << 'eclipseSettings'
-            //tasks << 'refreshBuildFileGenerator'
             tasks << 'applySvnIgnoreFromGeneratedFile'
             tasks << 'exportAntBuildFile'
             tasks << 'chalkbox:continous'
