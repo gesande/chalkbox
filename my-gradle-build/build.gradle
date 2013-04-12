@@ -2,6 +2,7 @@ import org.gradle.api.plugins.quality.FindBugs
 import org.gradle.api.plugins.quality.Pmd
 import org.gradle.api.tasks.GradleBuild
 import org.gradle.api.tasks.bundling.Jar
+import org.gradle.api.tasks.bundling.Zip
 import org.gradle.logging.StyledTextOutputFactory
 import org.gradle.logging.StyledTextOutput.Style
 import org.gradle.plugins.ide.eclipse.model.AbstractLibrary
@@ -16,8 +17,7 @@ apply plugin: 'java'
 apply plugin: 'pmd'
 apply plugin: 'findbugs'
 
-repositories {  flatDir { dirs 'lib'
-    }  }
+repositories {  flatDir { dirs 'lib' }  }
 
 dependencies {
     compile gradleApi()
@@ -91,12 +91,35 @@ project.task("sourcesJar", type: Jar, dependsOn:"classes") {
     from project.sourceSets.main.allSource
 }
 
+project.task('distribution', type: Zip) { Zip task ->
+    group = 'Distribution'
+    description = "Makes the project distribution archive containing jar and sources jar."
+    task.dependsOn("jar")
+    task.dependsOn("sourcesJar")
+    task.from project.jar
+    task.from project.sourcesJar
+    //task.from project.configurations.runtime
+}
+
 project.task("release", type: GradleBuild) { GradleBuild task ->
     //task.dependsOn "refreshBuildFileGenerator"
     group = 'Build'
     task.buildFile = 'build.gradle'
     description = 'Runs tests,jar and sourceJar targets.'
     task.tasks << 'test'
-    task.tasks << 'jar'
-    task.tasks << 'sourcesJar'
+    task.tasks << 'distribution'
+}
+
+project.task('runtimeDistribution', type: Zip) { Zip task ->
+    group = 'Distribution'
+    description = "Makes the project runtime distribution archive."
+    task.dependsOn("jar")
+    task.from project.jar
+    task.from project.configurations.runtime
+    task.excludes 'junit-4.10.jar'
+}
+
+project.artifacts {
+    archives project.distribution
+    archives project.sourcesJar
 }

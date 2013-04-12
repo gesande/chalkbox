@@ -23,7 +23,7 @@ public class ReportingPlugin implements Plugin<Project>{
             group = 'Reporting'
             description = "Prints out reporting plugin options"
             doLast {
-                println "reportDir = ${project.buildDir}/reports}"
+                println "reportDir = ${project.buildDir}/reports"
                 println "toolsDir = ${project.reportingSettings.toolsDirectory}"
             }
         }
@@ -36,7 +36,7 @@ public class ReportingPlugin implements Plugin<Project>{
                 project.configurations.antClasspath.each { File f ->
                     antClassLoader.addURL(f.toURI().toURL())
                 }
-                def targetDir = new File("${project.buildDir}/reports}", 'junit')
+                def targetDir = new File("${project.buildDir}/reports", 'junit')
                 targetDir.mkdirs()
                 def resultsDir=targetDir.getPath()
                 println 'Creating test report...'
@@ -60,7 +60,7 @@ public class ReportingPlugin implements Plugin<Project>{
             group = 'Reporting'
             description = "Makes aggregate coverage report with emma."
             doLast {
-                def targetDir = new File("${project.buildDir}/reports}", 'emma')
+                def targetDir = new File("${project.buildDir}/reports", 'emma')
                 targetDir.deleteDir()
                 targetDir.mkdirs()
                 def List<String> inArgs= new ArrayList<String>()
@@ -97,7 +97,7 @@ public class ReportingPlugin implements Plugin<Project>{
             group = 'Reporting'
             description = "Makes aggregate jdepend report with tattletale."
             doLast {
-                def targetDir = new File("${project.buildDir}/reports}", 'jdepend')
+                def targetDir = new File("${project.buildDir}/reports", 'jdepend')
                 targetDir.deleteDir()
                 targetDir.mkdirs()
                 def jarsDir= new File("${project.buildDir}/reports/analyzed-jars")
@@ -131,7 +131,7 @@ public class ReportingPlugin implements Plugin<Project>{
             group ='Reporting'
             description = 'Makes aggregate findbugs report.'
             doLast {
-                def targetDir = new File("${project.buildDir}/reports}", 'findbugs')
+                def targetDir = new File("${project.buildDir}/reports", 'findbugs')
                 targetDir.deleteDir()
                 targetDir.mkdirs()
                 def String jreHome = "${System.getenv('JAVA_HOME')}/jre"
@@ -200,7 +200,7 @@ public class ReportingPlugin implements Plugin<Project>{
             def timestamp = new Date(System.currentTimeMillis()).format("yyyyMMdd-HHmmss")
             from ("${project.buildDir}/reports")
             // Set destination directory.
-            def File parent = project.file("${project.buildDir}/reports}").getParentFile()
+            def File parent = project.file("${project.buildDir}/reports").getParentFile()
             task.destinationDir = parent
             // Set filename properties.
             task.baseName = "report-artifacts-${timestamp}"
