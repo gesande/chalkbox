@@ -22,13 +22,10 @@ ext {
 
     emmaPlugin="${buildScripts}/plugins/emma.gradle"
 
-    artifactVersion='1.0.1'
-
     distributionExcludes = ["junit-4.10-1.0.0.jar"]
     distributionBasename = 'chalkbox-distribution'
+    artifactVersion = '1.0.1'
 }
-
-version = "$artifactVersion"
 
 apply plugin: MavenCentral
 apply plugin: NewJavaProjectToSvnPlugin
