@@ -22,7 +22,7 @@ ext {
 
     emmaPlugin="${buildScripts}/plugins/emma.gradle"
 
-    distributionExcludes = ["junit-4.10-1.0.0.jar"]
+    distributionExcludes = ["*-lib.jar"]
     distributionBasename = 'chalkbox-distribution'
     artifactVersion = '1.0.1'
 }
