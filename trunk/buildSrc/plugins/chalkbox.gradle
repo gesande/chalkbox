@@ -38,7 +38,11 @@ apply plugin : ExportAntBuildFilePlugin
 
 apply plugin : ChalkBoxBuildPlugin
 
-reportingSettings { toolsDirectory = "${toolsDir}" }
+reportingSettings {
+    toolsDirectory = "${toolsDir}"
+    onlyAnalyze = 'net.sf'
+
+}
 
 subprojects {
     apply plugin : DefaultContinousBuildPlugin
