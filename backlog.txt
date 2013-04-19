@@ -5,11 +5,11 @@ introduced marker
 introduced examples for creating screenshot
 introduced example module
 introduced two separate examples
+provide gradle stuff for running all examples
 
 IN PROGRESS
 
 WAITING
-provide gradle stuff for running all examples
 provide shell scripts for running examples (using distribution)
 provide java backlogging using mybacklog
 take a look at http://git.springsource.org/spring-security/spring-security/blobs/5fe589e36074d51409c9ad5f87daf6564877534c/gradle/emma.gradle
