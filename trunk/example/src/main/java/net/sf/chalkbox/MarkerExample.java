@@ -1,16 +1,8 @@
 package net.sf.chalkbox;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
 
 public class MarkerExample {
-    public static void main(String[] args) throws IOException {
-        marker();
-    }
-
-    public static void marker() throws IOException {
+    public static void main(String[] args) {
         final ChalkBox box = new ChalkBox();
         final StringBuilder sb = new StringBuilder();
         final Marker marker = new Marker();
@@ -23,17 +15,7 @@ public class MarkerExample {
         appendText(sb, box.magenta(), marker, "marked");
         appendText(sb, box.cyan(), marker, "marked");
         appendText(sb, box.white(), marker, "marked");
-
-        final FileOutputStream out = new FileOutputStream(new File("./target",
-                "marker-example"));
-        final String content = sb.toString();
-        System.out.println(content);
-        try {
-            out.write(content.getBytes(Charset.defaultCharset()));
-        } finally {
-            out.flush();
-            out.close();
-        }
+        System.out.println(sb.toString());
     }
 
     private static void appendText(final StringBuilder sb, final Chalk chalk,
