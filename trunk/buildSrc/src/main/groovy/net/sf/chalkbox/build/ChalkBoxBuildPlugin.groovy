@@ -18,6 +18,8 @@ public class ChalkBoxBuildPlugin implements Plugin<Project>{
             tasks << 'eclipseSettings'
             tasks << 'applySvnIgnoreFromGeneratedFile'
             tasks << 'exportAntBuildFile'
+            tasks << 'showBacklog'
+            tasks << 'exportBacklog'
             tasks << 'chalkbox:continous'
             tasks << 'example:continous'
             tasks << 'chalkbox:dist'
