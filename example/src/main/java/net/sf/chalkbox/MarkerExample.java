@@ -1,6 +1,5 @@
 package net.sf.chalkbox;
 
-
 public class MarkerExample {
     public static void main(String[] args) {
         final ChalkBox box = new ChalkBox();

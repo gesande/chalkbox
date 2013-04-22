@@ -1,15 +1,21 @@
-DONE
-extracted chalkbox from perftence
-extracted ansi stuff into its own package
-introduced marker 
-introduced examples for creating screenshot
-introduced example module
-introduced two separate examples
-provide gradle stuff for running all examples
+Chalkbox backlog
 
-IN PROGRESS
+  DONE
 
-WAITING
-provide shell scripts for running examples (using distribution)
-provide java backlogging using mybacklog
-take a look at http://git.springsource.org/spring-security/spring-security/blobs/5fe589e36074d51409c9ad5f87daf6564877534c/gradle/emma.gradle
+  +++ extracted chalkbox from perftence +++ #feature
+  +++ extracted ansi stuff into its own package +++ #refactoring
+  +++ introduced marker +++ #feature
+  +++ introduced examples for creating screenshot +++ #developmentSupport
+  +++ introduced example module +++ #developmentSupport
+  +++ introduced two separate examples +++ #developmentSupport
+  +++ provide gradle stuff for running all examples +++ #developmentSupport
+  +++ provided java backlogging using mybacklog +++ #backlogging
+
+  IN PROGRESS
+
+  WAITING
+
+  --- provide shell scripts for running examples (using distribution) --- #developmentSupport
+  --- take a look at http://git.springsource.org/spring-security/spring-security/blobs/5fe589e36074d51409c9ad5f87daf6564877534c/gradle/emma.gradle --- #build
+
+
