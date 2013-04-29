@@ -10,6 +10,7 @@ Chalkbox backlog
   +++ introduced two separate examples +++ #developmentSupport
   +++ provide gradle stuff for running all examples +++ #developmentSupport
   +++ provided java backlogging using mybacklog +++ #backlogging
+  +++ applied my-gradle-build-1.0.3 +++ #build
 
   IN PROGRESS
 

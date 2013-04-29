@@ -20,6 +20,7 @@ public final class ExportAntBuildFilePlugin implements Plugin<Project>{
                 "distributionPackage",
                 "eclipseSettings",
                 "exportAntBuildFile",
+                "exportBacklog",
                 "tasks"
             ]
         }
