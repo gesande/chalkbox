@@ -34,7 +34,10 @@ public class ChalkboxBacklog extends AbstractBacklogging {
                         done("provide gradle stuff for running all examples",
                                 developmentSupport),
                         done("provided java backlogging using mybacklog",
-                                backlogging))
+                                backlogging),
+                        done("applied my-gradle-build-1.0.3", build)
+
+                )
                 .inProgress()
                 .title("IN PROGRESS")
                 .noTasks()
