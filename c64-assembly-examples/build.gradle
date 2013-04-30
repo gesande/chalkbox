@@ -1,0 +1,13 @@
+apply plugin: 'eclipse'
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+    mavenRepo url: "https://github.com/jpirinen/jpirinen-mvn-repo/raw/master/releases"
+}
+
+eclipse.classpath.defaultOutputDir = file('target/classes')
+
+dependencies {
+    compile group: 'c64dslj', name: 'c64dslj', version: '0.9'
+}
