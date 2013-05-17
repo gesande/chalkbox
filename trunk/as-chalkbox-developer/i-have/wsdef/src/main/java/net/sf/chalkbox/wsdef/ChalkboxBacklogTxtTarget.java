@@ -49,7 +49,6 @@ public class ChalkboxBacklogTxtTarget extends Target {
 					} catch (IOException e) {
 						throw new RuntimeException(e);
 					}
-
 				}
 			}).show();
 		} finally {

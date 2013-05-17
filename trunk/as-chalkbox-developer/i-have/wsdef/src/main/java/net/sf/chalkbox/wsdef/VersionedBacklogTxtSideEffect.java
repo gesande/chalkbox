@@ -24,7 +24,8 @@ public class VersionedBacklogTxtSideEffect implements SideEffect {
 
 	@Override
 	public void mutate(SideEffectContext ctx) throws Exception {
-		FileUtils.copyFile(ctx.iwantAsPath(backlogTxt), new File(ctx.wsRoot(), "backlog.txt"));
+		FileUtils.copyFile(ctx.iwantAsPath(backlogTxt), new File(ctx.wsRoot(),
+				"backlog.txt"));
 	}
 
 }
