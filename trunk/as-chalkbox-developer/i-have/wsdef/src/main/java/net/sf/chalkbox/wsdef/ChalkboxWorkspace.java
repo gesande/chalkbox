@@ -15,6 +15,7 @@ import net.sf.iwant.api.javamodules.CodeStylePolicy;
 import net.sf.iwant.api.javamodules.JavaBinModule;
 import net.sf.iwant.api.javamodules.JavaModule;
 import net.sf.iwant.api.javamodules.JavaSrcModule;
+import net.sf.iwant.api.javamodules.JavaSrcModule.IwantSrcModuleSpex;
 import net.sf.iwant.api.model.SideEffect;
 import net.sf.iwant.api.model.Source;
 import net.sf.iwant.api.model.StringFilter;
@@ -61,7 +62,7 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 		return emmaTarget(chalkbox());
 	}
 
-	private static Target emmaTarget(JavaSrcModule... modules) {
+	private static Target emmaTarget(final JavaSrcModule... modules) {
 		final EmmaTargetsOfJavaModules emmaTargets = EmmaTargetsOfJavaModules
 				.with()
 				.antJars(TestedIwantDependencies.antJar(),
@@ -80,9 +81,14 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 	}
 
 	private static JavaSrcModule chalkbox() {
-		return JavaSrcModule.with().name("chalkbox").mavenLayout().mainDeps()
-				.testDeps(junit2()).testedBy(new TestClassNameFilter())
-				.codeStyle(chalkboxCodeStylePolicy()).end();
+		return chalkboxSrcModule().name("chalkbox").mainDeps()
+				.testDeps(junit2()).end();
+	}
+
+	private static IwantSrcModuleSpex chalkboxSrcModule() {
+		return JavaSrcModule.with().mavenLayout()
+				.codeStyle(chalkboxCodeStylePolicy())
+				.testedBy(new TestClassNameFilter());
 	}
 
 	private static CodeStylePolicy chalkboxCodeStylePolicy() {
@@ -105,8 +111,7 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 	}
 
 	private static JavaSrcModule backlog() {
-		return JavaSrcModule.with().name("backlog").mavenLayout()
-				.mainDeps(myBacklog()).testDeps(junit2()).end();
+		return chalkboxSrcModule().name("backlog").mainDeps(myBacklog()).end();
 	}
 
 	private static JavaModule myBacklog() {
@@ -114,11 +119,4 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 				.source("lib-sources/my-backlog-1.0.2-sources.jar")
 				.inside(JavaSrcModule.with().name("backlog").end());
 	}
-
-	// private static JavaModule junit3() {
-	// return
-	// JavaSrcModule.with().exportsClasses(Source.underWsroot("junit-4.10/"),
-	// Source.underWsroot("junit-4.10/");
-	// }
-
 }
