@@ -5,18 +5,18 @@ import net.sf.ansivalues.AnsiValues;
 
 public final class Marker {
 
-    private final AnsiValueAppender ansiValueAppender;
+	private final AnsiValueAppender ansiValueAppender;
 
-    public Marker() {
-        this.ansiValueAppender = new AnsiValueAppender();
-    }
+	public Marker() {
+		this.ansiValueAppender = new AnsiValueAppender();
+	}
 
-    public String mark(final String text) {
-        return ansivalueAppender().append(text, AnsiValues.ReverseVideo);
-    }
+	public String mark(final String text) {
+		return ansivalueAppender().append(text, AnsiValues.ReverseVideo);
+	}
 
-    private AnsiValueAppender ansivalueAppender() {
-        return this.ansiValueAppender;
-    }
+	private AnsiValueAppender ansivalueAppender() {
+		return this.ansiValueAppender;
+	}
 
 }
