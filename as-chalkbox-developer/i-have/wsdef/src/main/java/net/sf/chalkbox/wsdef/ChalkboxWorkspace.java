@@ -30,9 +30,10 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 	@Override
 	public List<? extends SideEffect> sideEffects(
 			SideEffectDefinitionContext ctx) {
+
 		return Arrays.asList(EclipseSettings.with().name("eclipse-settings")
 				.modules(ctx.wsdefdefJavaModule(), ctx.wsdefJavaModule())
-				.modules(allSrcModules()).end());
+				.modules(allSrcModules()).end(), versionedBacklogTxt());
 	}
 
 	static class TestClassNameFilter implements StringFilter {
@@ -50,6 +51,10 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 
 	}
 
+	private static SideEffect versionedBacklogTxt() {
+		return new VersionedBacklogTxtSideEffect(backlogTxt());
+	}
+
 	private static Target backlogTxt() {
 		return new ChalkboxBacklogTxtTarget(backlog().mainArtifact());
 	}
@@ -65,7 +70,7 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 	}
 
 	private static SortedSet<JavaSrcModule> allSrcModules() {
-		return new TreeSet<JavaSrcModule>(Arrays.asList(chalkbox(),backlog()));
+		return new TreeSet<JavaSrcModule>(Arrays.asList(chalkbox(), backlog()));
 	}
 
 	private static JavaSrcModule chalkbox() {
