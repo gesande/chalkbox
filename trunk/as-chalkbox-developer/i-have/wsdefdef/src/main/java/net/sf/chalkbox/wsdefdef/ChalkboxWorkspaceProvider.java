@@ -1,5 +1,6 @@
 package net.sf.chalkbox.wsdefdef;
 
+import net.sf.iwant.api.FromRepository;
 import net.sf.iwant.api.IwantWorkspaceProvider;
 import net.sf.iwant.api.WorkspaceDefinitionContext;
 import net.sf.iwant.api.javamodules.JavaBinModule;
@@ -13,7 +14,12 @@ public class ChalkboxWorkspaceProvider implements IwantWorkspaceProvider {
 		return JavaSrcModule.with().name("chalkbox-workspace")
 				.locationUnderWsRoot("as-chalkbox-developer/i-have/wsdef")
 				.mainJava("src/main/java").mainDeps(ctx.iwantApiModules())
-				.mainDeps(backlog(), myBacklog()).end();
+				.mainDeps(backlog(), myBacklog(), commonsIo()).end();
+	}
+
+	private static JavaModule commonsIo() {
+		return JavaBinModule.providing(FromRepository.ibiblio()
+				.group("commons-io").name("commons-io").version("1.4"));
 	}
 
 	@Override
