@@ -7,13 +7,20 @@ import static net.sf.chalkbox.BacklogTag.feature;
 import static net.sf.chalkbox.BacklogTag.refactoring;
 import net.sf.mybacklog.AbstractBacklogging;
 import net.sf.mybacklog.Backlog;
+import net.sf.mybacklog.BacklogDisplay;
 import net.sf.mybacklog.DefaultBacklogFactory;
 import net.sf.mybacklog.SysoutBacklogDisplay;
 
 public class ChalkboxBacklog extends AbstractBacklogging {
 
+    private final BacklogDisplay backlogDisplay;
+
+    public ChalkboxBacklog(final BacklogDisplay backlogDisplay) {
+        this.backlogDisplay = backlogDisplay;
+    }
+
     public static void main(String[] args) {
-        new ChalkboxBacklog().show();
+        new ChalkboxBacklog(new SysoutBacklogDisplay()).show();
     }
 
     public void show() {
@@ -56,7 +63,10 @@ public class ChalkboxBacklog extends AbstractBacklogging {
 
     @Override
     protected Backlog newBacklog() {
-        return DefaultBacklogFactory.displayedBy(new SysoutBacklogDisplay())
-                .newBacklog();
+        return DefaultBacklogFactory.displayedBy(backlogDisplay()).newBacklog();
+    }
+
+    private BacklogDisplay backlogDisplay() {
+        return this.backlogDisplay;
     }
 }
