@@ -30,7 +30,6 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 	@Override
 	public List<? extends SideEffect> sideEffects(
 			SideEffectDefinitionContext ctx) {
-
 		return Arrays.asList(EclipseSettings.with().name("eclipse-settings")
 				.modules(ctx.wsdefdefJavaModule(), ctx.wsdefJavaModule())
 				.modules(allSrcModules()).end(), versionedBacklogTxt());
@@ -48,7 +47,6 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 		public String toString() {
 			return getClass().getCanonicalName();
 		}
-
 	}
 
 	private static SideEffect versionedBacklogTxt() {
@@ -60,17 +58,25 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 	}
 
 	private static Target emmaCoverage() {
-		EmmaTargetsOfJavaModules emmaTargets = EmmaTargetsOfJavaModules
+		return emmaTarget(chalkbox());
+	}
+
+	private static Target emmaTarget(JavaSrcModule... modules) {
+		final EmmaTargetsOfJavaModules emmaTargets = EmmaTargetsOfJavaModules
 				.with()
 				.antJars(TestedIwantDependencies.antJar(),
 						TestedIwantDependencies.antLauncherJar())
-				.emma(TestedIwantDependencies.emma()).modules(allSrcModules())
-				.end();
+				.emma(TestedIwantDependencies.emma()).modules(modules).end();
 		return emmaTargets.emmaReport();
 	}
 
 	private static SortedSet<JavaSrcModule> allSrcModules() {
-		return new TreeSet<JavaSrcModule>(Arrays.asList(chalkbox(), backlog()));
+		return asTreeSet(Arrays.asList(chalkbox(), backlog()));
+	}
+
+	private static SortedSet<JavaSrcModule> asTreeSet(
+			final List<JavaSrcModule> asList) {
+		return new TreeSet<JavaSrcModule>(asList);
 	}
 
 	private static JavaSrcModule chalkbox() {
@@ -84,6 +90,7 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 				.warn(CodeStyle.REPORT_METHOD_CAN_BE_POTENTIALLY_STATIC).end();
 	}
 
+	@SuppressWarnings("unused")
 	private static JavaModule junit() {
 		return JavaBinModule
 				.providing(
@@ -99,7 +106,7 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 
 	private static JavaSrcModule backlog() {
 		return JavaSrcModule.with().name("backlog").mavenLayout()
-				.mainDeps(myBacklog()).end();
+				.mainDeps(myBacklog()).testDeps(junit2()).end();
 	}
 
 	private static JavaModule myBacklog() {
