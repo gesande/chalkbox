@@ -19,4 +19,3 @@ Chalkbox backlog
   --- provide shell scripts for running examples (using distribution) --- #developmentSupport
   --- take a look at http://git.springsource.org/spring-security/spring-security/blobs/5fe589e36074d51409c9ad5f87daf6564877534c/gradle/emma.gradle --- #build
 
-
