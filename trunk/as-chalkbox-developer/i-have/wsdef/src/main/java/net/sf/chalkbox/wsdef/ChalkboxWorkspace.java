@@ -24,7 +24,7 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 
 	@Override
 	public List<? extends Target> targets() {
-		return Arrays.asList(emmaCoverage());
+		return Arrays.asList(emmaCoverage(), backlogTxt());
 	}
 
 	@Override
@@ -50,6 +50,10 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 
 	}
 
+	private static Target backlogTxt() {
+		return new ChalkboxBacklogTxtTarget(backlog().mainArtifact());
+	}
+
 	private static Target emmaCoverage() {
 		EmmaTargetsOfJavaModules emmaTargets = EmmaTargetsOfJavaModules
 				.with()
@@ -61,7 +65,7 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 	}
 
 	private static SortedSet<JavaSrcModule> allSrcModules() {
-		return new TreeSet<JavaSrcModule>(Arrays.asList(chalkbox()));
+		return new TreeSet<JavaSrcModule>(Arrays.asList(chalkbox(),backlog()));
 	}
 
 	private static JavaSrcModule chalkbox() {
@@ -86,6 +90,17 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 		return JavaBinModule.named("lib/junit-4.10.jar")
 				.source("lib-sources/junit-4.10-src.jar")
 				.inside(JavaSrcModule.with().name("junit-4.10").end());
+	}
+
+	private static JavaSrcModule backlog() {
+		return JavaSrcModule.with().name("backlog").mavenLayout()
+				.mainDeps(myBacklog()).end();
+	}
+
+	private static JavaModule myBacklog() {
+		return JavaBinModule.named("lib/my-backlog-1.0.2.jar")
+				.source("lib-sources/my-backlog-1.0.2-sources.jar")
+				.inside(JavaSrcModule.with().name("backlog").end());
 	}
 
 	// private static JavaModule junit3() {
