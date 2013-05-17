@@ -59,10 +59,10 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 	}
 
 	private static Target emmaCoverage() {
-		return emmaTarget(chalkbox());
+		return emmaTarget(allSrcModules());
 	}
 
-	private static Target emmaTarget(final JavaSrcModule... modules) {
+	private static Target emmaTarget(final SortedSet<JavaSrcModule> modules) {
 		final EmmaTargetsOfJavaModules emmaTargets = EmmaTargetsOfJavaModules
 				.with()
 				.antJars(TestedIwantDependencies.antJar(),
@@ -72,7 +72,7 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 	}
 
 	private static SortedSet<JavaSrcModule> allSrcModules() {
-		return asTreeSet(Arrays.asList(chalkbox(), backlog()));
+		return asTreeSet(Arrays.asList(backlog(), chalkbox(), example()));
 	}
 
 	private static SortedSet<JavaSrcModule> asTreeSet(
@@ -82,7 +82,7 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 
 	private static JavaSrcModule chalkbox() {
 		return chalkboxSrcModule().name("chalkbox").mainDeps()
-				.testDeps(junit2()).end();
+				.testDeps(junit()).end();
 	}
 
 	private static IwantSrcModuleSpex chalkboxSrcModule() {
@@ -97,21 +97,29 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 	}
 
 	@SuppressWarnings("unused")
-	private static JavaModule junit() {
+	private static JavaModule junitAsProviding() {
 		return JavaBinModule
 				.providing(
 						Source.underWsroot("junit-4.10/lib/junit-4.10.jar"),
 						Source.underWsroot("junit-4.10/lib-sources/junit-4.10-src.jar"));
 	}
 
-	private static JavaModule junit2() {
+	private static JavaModule junit() {
 		return JavaBinModule.named("lib/junit-4.10.jar")
 				.source("lib-sources/junit-4.10-src.jar")
 				.inside(JavaSrcModule.with().name("junit-4.10").end());
 	}
 
+	private static JavaSrcModule example() {
+		return JavaSrcModule.with().name("example").mainJava("src/main/java")
+				.codeStyle(chalkboxCodeStylePolicy()).mainDeps(chalkbox())
+				.end();
+	}
+
 	private static JavaSrcModule backlog() {
-		return chalkboxSrcModule().name("backlog").mainDeps(myBacklog()).end();
+		return JavaSrcModule.with().name("backlog").mainJava("src/main/java")
+				.codeStyle(chalkboxCodeStylePolicy()).mainDeps(myBacklog())
+				.end();
 	}
 
 	private static JavaModule myBacklog() {

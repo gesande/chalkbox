@@ -19,7 +19,7 @@ public class ChalkboxBacklog extends AbstractBacklogging {
 		this.backlogDisplay = backlogDisplay;
 	}
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		new ChalkboxBacklog(new SysoutBacklogDisplay()).show();
 	}
 
@@ -42,7 +42,8 @@ public class ChalkboxBacklog extends AbstractBacklogging {
 								developmentSupport),
 						done("provided java backlogging using mybacklog",
 								backlogging),
-						done("applied my-gradle-build-1.0.3", build)
+						done("applied my-gradle-build-1.0.3", build),
+						done("applied iwant build", build)
 
 				)
 				.inProgress()
