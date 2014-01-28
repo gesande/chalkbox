@@ -1,3 +1,4 @@
+
 chalkbox - using ansi colors when writing text 
 trying to encapsulate the domain from http://en.wikipedia.org/wiki/ANSI_escape_code
 
