@@ -2,6 +2,7 @@ package net.sf.chalkbox.wsdef;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -13,19 +14,81 @@ import net.sf.iwant.api.TestedIwantDependencies;
 import net.sf.iwant.api.javamodules.CodeStyle;
 import net.sf.iwant.api.javamodules.CodeStylePolicy;
 import net.sf.iwant.api.javamodules.JavaBinModule;
+import net.sf.iwant.api.javamodules.JavaClassesAndSources;
 import net.sf.iwant.api.javamodules.JavaModule;
 import net.sf.iwant.api.javamodules.JavaSrcModule;
 import net.sf.iwant.api.javamodules.JavaSrcModule.IwantSrcModuleSpex;
+import net.sf.iwant.api.model.Path;
 import net.sf.iwant.api.model.SideEffect;
 import net.sf.iwant.api.model.Source;
 import net.sf.iwant.api.model.StringFilter;
 import net.sf.iwant.api.model.Target;
+import net.sf.iwant.plugin.findbugs.FindbugsDistribution;
+import net.sf.iwant.plugin.findbugs.FindbugsOutputFormat;
+import net.sf.iwant.plugin.findbugs.FindbugsReport;
+import net.sf.iwant.plugin.findbugs.FindbugsReport.FindbugsReportSpex;
 
 public class ChalkboxWorkspace implements IwantWorkspace {
 
 	@Override
 	public List<? extends Target> targets() {
-		return Arrays.asList(emmaCoverage(), backlogTxt());
+		return Arrays.asList(emmaCoverage(), backlogTxt(), findbugsReport());
+	}
+
+	private static Target findbugsReport() {
+		return findbugsReportFor("findbugs-report", FindbugsOutputFormat.HTML);
+	}
+
+	private static Target findbugsReportFor(String name,
+			FindbugsOutputFormat outputFormat) {
+		FindbugsDistribution findbugs = FindbugsDistribution.ofVersion("2.0.2");
+		FindbugsReportSpex report = FindbugsReport.with().name(name)
+				.using(findbugs, ant(), antLauncher())
+				.outputFormat(outputFormat);
+
+		FindbugsReportHelper.reportWithModules(report, allSrcModules());
+		return report.end();
+	}
+
+	private static Path ant() {
+		return TestedIwantDependencies.antJar();
+	}
+
+	private static Path antLauncher() {
+		return TestedIwantDependencies.antLauncherJar();
+	}
+
+	private static class FindbugsReportHelper {
+
+		public static FindbugsReportSpex reportWithModules(
+				FindbugsReportSpex report,
+				SortedSet<? extends JavaModule> modules) {
+			for (JavaModule module : modules) {
+				reportWithModule(report, module);
+			}
+			return report;
+		}
+
+		private static void reportWithModule(FindbugsReportSpex report,
+				JavaModule module) {
+			Set<JavaModule> allDeps = module.effectivePathForTestRuntime();
+			for (JavaModule dep : allDeps) {
+				if (!(dep instanceof JavaSrcModule)) {
+					report.auxClasses(dep.mainArtifact());
+					continue;
+				}
+				JavaSrcModule srcDep = (JavaSrcModule) dep;
+				if (srcDep.mainArtifact() != null) {
+					report.classesToAnalyze(new JavaClassesAndSources(srcDep
+							.mainArtifact(), srcDep.mainJavasAsPaths()));
+				}
+				if (srcDep.testArtifact() != null) {
+					report.classesToAnalyze(new JavaClassesAndSources(srcDep
+							.testArtifact(), srcDep.testJavasAsPaths()));
+				}
+			}
+		}
+
 	}
 
 	@Override
@@ -59,16 +122,17 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 	}
 
 	private static Target emmaCoverage() {
-		return emmaTarget(allSrcModules());
+		return emmaTarget(allSrcModules(), "coverage-report");
 	}
 
-	private static Target emmaTarget(final SortedSet<JavaSrcModule> modules) {
+	private static Target emmaTarget(final SortedSet<JavaSrcModule> modules,
+			String name) {
 		final EmmaTargetsOfJavaModules emmaTargets = EmmaTargetsOfJavaModules
 				.with()
 				.antJars(TestedIwantDependencies.antJar(),
 						TestedIwantDependencies.antLauncherJar())
 				.emma(TestedIwantDependencies.emma()).modules(modules).end();
-		return emmaTargets.emmaReport();
+		return emmaTargets.emmaReport(name);
 	}
 
 	private static SortedSet<JavaSrcModule> allSrcModules() {
@@ -101,13 +165,14 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 		return JavaBinModule
 				.providing(
 						Source.underWsroot("junit-4.10/lib/junit-4.10.jar"),
-						Source.underWsroot("junit-4.10/lib-sources/junit-4.10-src.jar"));
+						Source.underWsroot("junit-4.10/lib-sources/junit-4.10-src.jar"))
+				.end();
 	}
 
 	private static JavaModule junit() {
 		return JavaBinModule.named("lib/junit-4.10.jar")
 				.source("lib-sources/junit-4.10-src.jar")
-				.inside(JavaSrcModule.with().name("junit-4.10").end());
+				.inside(JavaSrcModule.with().name("junit-4.10").end()).end();
 	}
 
 	private static JavaSrcModule example() {
@@ -125,6 +190,6 @@ public class ChalkboxWorkspace implements IwantWorkspace {
 	private static JavaModule myBacklog() {
 		return JavaBinModule.named("lib/my-backlog-1.0.2.jar")
 				.source("lib-sources/my-backlog-1.0.2-sources.jar")
-				.inside(JavaSrcModule.with().name("backlog").end());
+				.inside(JavaSrcModule.with().name("backlog").end()).end();
 	}
 }
